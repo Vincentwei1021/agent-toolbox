@@ -1,9 +1,11 @@
 import { Hono } from "hono";
 import { serve } from "@hono/node-server";
 import { config } from "./config.js";
+import { getDb } from "./db.js";
 import { authMiddleware } from "./middleware/auth.js";
 import { rateLimitMiddleware } from "./middleware/rateLimit.js";
 import { loggerMiddleware } from "./middleware/logger.js";
+import { usageTrackingMiddleware } from "./middleware/usageTracking.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { healthRouter } from "./routes/health.js";
 import { searchRouter } from "./routes/search.js";
@@ -12,7 +14,13 @@ import { weatherRouter } from "./routes/weather.js";
 import { financeRouter } from "./routes/finance.js";
 import { screenshotRouter } from "./routes/screenshot.js";
 import { docsRouter } from "./routes/docs.js";
+import { authRouter } from "./routes/auth.js";
+import { billingRouter } from "./routes/billing.js";
+import { landingRouter } from "./routes/landing.js";
 import { closeBrowser } from "./services/browser.js";
+
+// Initialize database on startup
+getDb();
 
 const app = new Hono();
 
@@ -20,9 +28,13 @@ const app = new Hono();
 app.use("*", loggerMiddleware);
 app.use("*", authMiddleware);
 app.use("*", rateLimitMiddleware);
+app.use("*", usageTrackingMiddleware);
 
 // Routes
+app.route("/", landingRouter);
 app.route("/", healthRouter);
+app.route("/", authRouter);
+app.route("/", billingRouter);
 app.route("/", searchRouter);
 app.route("/", extractRouter);
 app.route("/", weatherRouter);

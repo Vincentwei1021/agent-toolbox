@@ -28,4 +28,9 @@ export const config = {
   apiKeys: (process.env.API_KEYS || "").split(",").filter(Boolean),
   nodeEnv: process.env.NODE_ENV || "development",
   version: "1.0.0",
+  stripeSecretKey: process.env.STRIPE_SECRET_KEY || "",
+  stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET || "",
+  stripePricePro: process.env.STRIPE_PRICE_PRO || "",
+  stripePriceScale: process.env.STRIPE_PRICE_SCALE || "",
+  databasePath: process.env.DATABASE_PATH || "./data/agent-toolbox.db",
 } as const;
