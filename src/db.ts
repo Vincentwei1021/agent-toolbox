@@ -9,8 +9,8 @@ export interface ApiKeyRow {
   key: string;
   user_email: string;
   plan: string;
-  stripe_customer_id: string | null;
-  stripe_subscription_id: string | null;
+  creem_customer_id: string | null;
+  creem_subscription_id: string | null;
   created_at: string;
   status: string;
 }
@@ -53,8 +53,8 @@ function initTables(db: Database.Database): void {
       key TEXT UNIQUE NOT NULL,
       user_email TEXT NOT NULL,
       plan TEXT NOT NULL DEFAULT 'free' CHECK(plan IN ('free', 'builder', 'pro', 'scale')),
-      stripe_customer_id TEXT,
-      stripe_subscription_id TEXT,
+      creem_customer_id TEXT,
+      creem_subscription_id TEXT,
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       status TEXT NOT NULL DEFAULT 'active' CHECK(status IN ('active', 'suspended'))
     );
@@ -90,9 +90,9 @@ export function findApiKeyByEmail(email: string): ApiKeyRow | undefined {
   return db.prepare("SELECT * FROM api_keys WHERE user_email = ?").get(email) as ApiKeyRow | undefined;
 }
 
-export function findApiKeyByStripeCustomerId(customerId: string): ApiKeyRow | undefined {
+export function findApiKeyByCreemCustomerId(customerId: string): ApiKeyRow | undefined {
   const db = getDb();
-  return db.prepare("SELECT * FROM api_keys WHERE stripe_customer_id = ?").get(customerId) as ApiKeyRow | undefined;
+  return db.prepare("SELECT * FROM api_keys WHERE creem_customer_id = ?").get(customerId) as ApiKeyRow | undefined;
 }
 
 export function createApiKey(email: string, plan: string = "free"): ApiKeyRow {
@@ -154,10 +154,10 @@ export function updatePlan(apiKeyId: number, plan: string): void {
   db.prepare("UPDATE api_keys SET plan = ? WHERE id = ?").run(plan, apiKeyId);
 }
 
-export function updateStripeInfo(apiKeyId: number, customerId: string, subscriptionId: string): void {
+export function updateCreemInfo(apiKeyId: number, customerId: string, subscriptionId: string): void {
   const db = getDb();
   db.prepare(
-    "UPDATE api_keys SET stripe_customer_id = ?, stripe_subscription_id = ? WHERE id = ?"
+    "UPDATE api_keys SET creem_customer_id = ?, creem_subscription_id = ? WHERE id = ?"
   ).run(customerId, subscriptionId, apiKeyId);
 }
 
