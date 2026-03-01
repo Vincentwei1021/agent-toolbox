@@ -1,0 +1,33 @@
+{
+  "name": "agent-toolbox",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "mcp": "node dist/mcp-server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hono/node-server": "^1.19.9",
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "@mozilla/readability": "^0.6.0",
+    "@types/jsdom": "^28.0.0",
+    "@types/node": "^25.3.3",
+    "@types/turndown": "^5.0.6",
+    "@types/uuid": "^10.0.0",
+    "hono": "^4.12.3",
+    "jsdom": "^28.1.0",
+    "playwright": "^1.58.2",
+    "tsx": "^4.21.0",
+    "turndown": "^7.2.2",
+    "typescript": "^5.9.3",
+    "uuid": "^13.0.0",
+    "yahoo-finance2": "^3.13.1",
+    "zod": "^4.3.6"
+  }
+}
