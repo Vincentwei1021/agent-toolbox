@@ -20,6 +20,7 @@ export const openApiSpec = {
     { name: "Finance", description: "Stock quotes and exchange rates" },
     { name: "Screenshot", description: "Web page screenshots via Playwright" },
     { name: "Email", description: "Email address validation" },
+    { name: "Translate", description: "Text translation with language detection" },
     { name: "Auth", description: "API key management and usage" },
     { name: "Billing", description: "Subscription management via Creem" },
     { name: "System", description: "Health check and documentation" },
@@ -545,6 +546,71 @@ export const openApiSpec = {
           "400": { description: "Invalid signature" },
         },
       },
+    "/v1/translate": {
+      post: {
+        tags: ["Translate"],
+        summary: "Translate text",
+        description: "Translate text between languages with auto-detection, Markdown preservation, glossary support, and batch processing. Powered by Google Translate (free, no API key).",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["target"],
+                properties: {
+                  text: { type: "string", description: "Text to translate (single mode)", example: "Hello, how are you?" },
+                  texts: { type: "array", items: { type: "string" }, description: "Array of texts (batch mode, max 20)", example: ["Hello", "Goodbye"] },
+                  target: { type: "string", description: "Target language code (ISO 639-1)", example: "zh" },
+                  source: { type: "string", default: "auto", description: "Source language code or 'auto' for detection" },
+                  glossary: { type: "object", description: "Term mapping to preserve specific translations", example: { "API": "API", "endpoint": "端点" } },
+                },
+              },
+              examples: {
+                single: { summary: "Single text", value: { text: "Hello, how are you?", target: "zh" } },
+                batch: { summary: "Batch", value: { texts: ["Hello", "Goodbye"], target: "ja" } },
+                glossary: { summary: "With glossary", value: { text: "The API endpoint returns JSON data.", target: "zh", glossary: { "API": "API", "endpoint": "端点", "JSON": "JSON" } } },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Translation result",
+            content: {
+              "application/json": {
+                examples: {
+                  single: {
+                    summary: "Single translation",
+                    value: {
+                      success: true,
+                      data: { text: "Hello, how are you?", translation: "你好，你好吗？", detectedLanguage: { code: "en", confidence: 0.95 }, target: "zh" },
+                      meta: { requestId: "abc-123", latencyMs: 350, endpoint: "/v1/translate", timestamp: "2026-03-02T22:00:00.000Z" },
+                    },
+                  },
+                  batch: {
+                    summary: "Batch translation",
+                    value: {
+                      success: true,
+                      data: {
+                        translations: [
+                          { text: "Hello", translation: "こんにちは", detectedLanguage: { code: "en", confidence: 0.95 }, target: "ja" },
+                          { text: "Goodbye", translation: "さようなら", detectedLanguage: { code: "en", confidence: 0.95 }, target: "ja" },
+                        ],
+                        target: "ja",
+                      },
+                      meta: { requestId: "def-456", latencyMs: 700, endpoint: "/v1/translate", timestamp: "2026-03-02T22:00:00.000Z" },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "Validation error", content: { "application/json": { schema: { "$ref": "#/components/schemas/ErrorResponse" } } } },
+          "401": { description: "Unauthorized" },
+        },
+      },
+    },
     },
     "/v1/validate-email": {
       post: {

@@ -18,6 +18,7 @@ import { authRouter } from "./routes/auth.js";
 import { billingRouter } from "./routes/billing.js";
 import { landingRouter } from "./routes/landing.js";
 import { emailRouter } from "./routes/email.js";
+import { translateRouter } from "./routes/translate.js";
 import { closeBrowser } from "./services/browser.js";
 
 // Initialize database on startup
@@ -42,6 +43,7 @@ app.route("/", weatherRouter);
 app.route("/", financeRouter);
 app.route("/", screenshotRouter);
 app.route("/", emailRouter);
+app.route("/", translateRouter);
 app.route("/", docsRouter);
 
 // Error handler
