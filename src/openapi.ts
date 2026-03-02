@@ -19,6 +19,7 @@ export const openApiSpec = {
     { name: "Weather", description: "Weather forecasts via Open-Meteo" },
     { name: "Finance", description: "Stock quotes and exchange rates" },
     { name: "Screenshot", description: "Web page screenshots via Playwright" },
+    { name: "Email", description: "Email address validation" },
     { name: "Auth", description: "API key management and usage" },
     { name: "Billing", description: "Subscription management via Creem" },
     { name: "System", description: "Health check and documentation" },
@@ -542,6 +543,54 @@ export const openApiSpec = {
         responses: {
           "200": { description: "Webhook processed" },
           "400": { description: "Invalid signature" },
+        },
+      },
+    },
+    "/v1/validate-email": {
+      post: {
+        tags: ["Email"],
+        summary: "Validate an email address",
+        description: "Validates an email address by checking syntax, MX records, SMTP reachability, and disposable domain detection. Zero cost — no external APIs used.",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["email"],
+                properties: {
+                  email: { type: "string", format: "email", description: "Email address to validate", example: "test@gmail.com" },
+                },
+              },
+              example: { email: "test@gmail.com" },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Email validation result",
+            content: {
+              "application/json": {
+                example: {
+                  success: true,
+                  data: {
+                    email: "test@gmail.com",
+                    valid_syntax: true,
+                    mx_found: true,
+                    mx_records: [{ exchange: "gmail-smtp-in.l.google.com", priority: 5 }],
+                    smtp_reachable: true,
+                    smtp_response: "250 2.1.5 OK",
+                    is_disposable: false,
+                    score: 0.95,
+                    verdict: "deliverable",
+                  },
+                  meta: { requestId: "abc-123", latencyMs: 1200, endpoint: "/v1/validate-email", timestamp: "2026-03-02T20:00:00.000Z" },
+                },
+              },
+            },
+          },
+          "400": { description: "Validation error", content: { "application/json": { schema: { "$ref": "#/components/schemas/ErrorResponse" } } } },
+          "401": { description: "Unauthorized" },
         },
       },
     },
