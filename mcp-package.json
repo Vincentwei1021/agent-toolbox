@@ -1,0 +1,54 @@
+{
+  "name": "@agent-toolbox/mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server providing web search, content extraction, weather, finance, and screenshot tools for AI agents",
+  "main": "dist/mcp-server.js",
+  "bin": {
+    "agent-toolbox-mcp": "dist/mcp-server.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/mcp-server.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "ai-agent",
+    "tools",
+    "web-search",
+    "screenshot",
+    "weather",
+    "finance",
+    "content-extraction",
+    "readability",
+    "ai-tools"
+  ],
+  "author": "Agent Toolbox",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Vincentwei1021/agent-toolbox"
+  },
+  "homepage": "https://github.com/Vincentwei1021/agent-toolbox#mcp-server",
+  "bugs": {
+    "url": "https://github.com/Vincentwei1021/agent-toolbox/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "dist/mcp-server.js",
+    "dist/services/",
+    "dist/utils/",
+    "README-MCP.md"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "@mozilla/readability": "^0.6.0",
+    "jsdom": "^28.1.0",
+    "playwright": "^1.58.2",
+    "turndown": "^7.2.2",
+    "yahoo-finance2": "^3.13.1",
+    "zod": "^4.3.6"
+  }
+}
