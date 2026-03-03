@@ -1,6 +1,6 @@
 # Agent Toolbox API
 
-A REST API + MCP Server providing web search, content extraction, weather, finance, and screenshot tools for AI agents.
+A REST API + MCP Server providing web search, content extraction, weather, finance, screenshot, email validation, and translation tools for AI agents.
 
 ## Quick Start
 
@@ -109,6 +109,50 @@ curl -X POST http://localhost:3100/v1/screenshot \
   -d '{"url": "https://example.com", "width": 1280, "height": 720}'
 ```
 
+### POST /v1/validate-email
+
+Validate an email address — syntax check, MX record lookup, SMTP handshake verification, and disposable domain detection. Zero cost, no external APIs.
+
+```bash
+curl -X POST http://localhost:3100/v1/validate-email \
+  -H "Authorization: Bearer your-api-key" \
+  -H "Content-Type: application/json" \
+  -d '{"email": "test@gmail.com"}'
+```
+
+Response includes `valid_syntax`, `mx_found`, `mx_records`, `smtp_reachable`, `is_disposable`, `score` (0–1), and `verdict` (`deliverable` | `risky` | `undeliverable` | `invalid`).
+
+### POST /v1/translate
+
+Translate text between languages with auto-detection, Markdown preservation, glossary support, and batch processing. Powered by Google Translate (free).
+
+```bash
+# Single text
+curl -X POST http://localhost:3100/v1/translate \
+  -H "Authorization: Bearer your-api-key" \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Hello, how are you?", "target": "zh"}'
+
+# Batch
+curl -X POST http://localhost:3100/v1/translate \
+  -H "Authorization: Bearer your-api-key" \
+  -H "Content-Type: application/json" \
+  -d '{"texts": ["Hello", "Goodbye"], "target": "ja"}'
+
+# With glossary (terms preserved as-is)
+curl -X POST http://localhost:3100/v1/translate \
+  -H "Authorization: Bearer your-api-key" \
+  -H "Content-Type: application/json" \
+  -d '{"text": "The API endpoint returns JSON.", "target": "zh", "glossary": {"API": "API", "JSON": "JSON"}}'
+```
+
+Parameters:
+- `text` (string) — single text to translate
+- `texts` (string[]) — batch mode, max 20 items
+- `target` (string, required) — target language code (e.g. `zh`, `ja`, `es`)
+- `source` (string, default `auto`) — source language or `auto` for detection
+- `glossary` (object) — term→translation mapping to preserve specific words
+
 ### GET /v1/docs
 
 OpenAPI 3.0 specification (no auth required).
@@ -125,7 +169,7 @@ Run as an MCP server over stdio:
 npm run mcp
 ```
 
-Available tools: `search`, `extract`, `weather`, `finance`, `screenshot`
+Available tools: `search`, `extract`, `weather`, `finance`, `screenshot`, `validate-email`, `translate`
 
 ## Production Deployment
 

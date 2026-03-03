@@ -546,6 +546,7 @@ export const openApiSpec = {
           "400": { description: "Invalid signature" },
         },
       },
+    },
     "/v1/translate": {
       post: {
         tags: ["Translate"],
@@ -610,7 +611,6 @@ export const openApiSpec = {
           "401": { description: "Unauthorized" },
         },
       },
-    },
     },
     "/v1/validate-email": {
       post: {
