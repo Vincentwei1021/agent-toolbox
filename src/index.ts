@@ -21,6 +21,7 @@ import { landingRouter } from "./routes/landing.js";
 import { emailRouter } from "./routes/email.js";
 import { translateRouter } from "./routes/translate.js";
 import { usageRouter } from "./routes/usage.js";
+import { playgroundRouter } from "./routes/playground.js";
 import { closeBrowser } from "./services/browser.js";
 
 // Initialize database on startup
@@ -48,6 +49,7 @@ app.route("/", screenshotRouter);
 app.route("/", emailRouter);
 app.route("/", translateRouter);
 app.route("/", usageRouter);
+app.route("/", playgroundRouter);
 app.route("/", docsRouter);
 
 // Error handler

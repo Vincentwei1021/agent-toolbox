@@ -4,7 +4,7 @@ import { errorResponse } from "../utils/response.js";
 import { findApiKeyByKey, getMonthlyUsage } from "../db.js";
 import type { ApiKeyRow } from "../db.js";
 
-const PUBLIC_PATHS = ["/health", "/v1/docs", "/v1/auth/register", "/v1/billing/webhook", "/v1/usage/summary", "/"];
+const PUBLIC_PATHS = ["/health", "/v1/docs", "/v1/auth/register", "/v1/billing/webhook", "/v1/usage/summary", "/playground", "/"];
 
 const PLAN_LIMITS: Record<string, number> = {
   free: 1_000,
