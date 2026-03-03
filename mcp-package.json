@@ -1,7 +1,7 @@
 {
-  "name": "@agent-toolbox/mcp-server",
+  "name": "agent-toolbox-mcp",
   "version": "1.0.0",
-  "description": "MCP server providing web search, content extraction, weather, finance, and screenshot tools for AI agents",
+  "description": "MCP server providing web search, content extraction, weather, finance, screenshot, email validation, and translation tools for AI agents",
   "main": "dist/mcp-server.js",
   "bin": {
     "agent-toolbox-mcp": "dist/mcp-server.js"
@@ -21,7 +21,9 @@
     "finance",
     "content-extraction",
     "readability",
-    "ai-tools"
+    "ai-tools",
+    "email-validation",
+    "translation"
   ],
   "author": "Agent Toolbox",
   "license": "MIT",
@@ -37,10 +39,7 @@
     "node": ">=18.0.0"
   },
   "files": [
-    "dist/mcp-server.js",
-    "dist/services/",
-    "dist/utils/",
-    "README-MCP.md"
+    "dist/"
   ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.27.1",
