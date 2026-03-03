@@ -1,0 +1,32 @@
+name: agent-toolbox
+version: 1.0.0
+description: "Production-ready MCP server for AI agents — web search, content extraction, screenshots, weather, finance, email validation, and translation"
+homepage: https://github.com/Vincentwei1021/agent-toolbox
+license: MIT
+categories:
+  - search
+  - data-extraction
+  - utilities
+  - ai-tools
+tools:
+  - name: search
+    description: "Search the web via DuckDuckGo. Returns titles, URLs, and snippets."
+  - name: extract
+    description: "Extract clean content from any URL using Mozilla Readability. Supports markdown, text, and JSON output."
+  - name: screenshot
+    description: "Capture screenshots of any web page as PNG."
+  - name: weather
+    description: "Get current conditions and 7-day forecasts for any location worldwide."
+  - name: finance
+    description: "Real-time stock quotes, historical data, and currency exchange rates."
+  - name: validate-email
+    description: "Validate email addresses for format, DNS, and deliverability."
+  - name: translate
+    description: "Translate text between any languages using cloud translation APIs."
+install:
+  type: npm
+  package: "@agent-toolbox/mcp-server"
+  command: agent-toolbox-mcp
+runtime:
+  type: node
+  command: agent-toolbox-mcp
