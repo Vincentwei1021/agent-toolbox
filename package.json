@@ -1,7 +1,7 @@
 {
   "name": "agent-toolbox",
   "version": "1.0.0",
-  "description": "",
+  "description": "REST API + MCP Server giving AI agents real-world superpowers — web search, content extraction, screenshots, weather, finance, email validation, and translation",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
@@ -9,9 +9,24 @@
     "dev": "tsx watch src/index.ts",
     "mcp": "node dist/mcp-server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "ai-agent",
+    "ai-tools",
+    "web-scraping",
+    "search-api",
+    "web-search",
+    "screenshot",
+    "weather-api",
+    "finance-api",
+    "email-validation",
+    "translation",
+    "content-extraction"
+  ],
+  "author": "Agent Toolbox",
+  "license": "MIT",
   "dependencies": {
     "@hono/node-server": "^1.19.9",
     "@modelcontextprotocol/sdk": "^1.27.1",
@@ -34,5 +49,13 @@
     "uuid": "^13.0.0",
     "yahoo-finance2": "^3.13.1",
     "zod": "^4.3.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vincentwei1021/agent-toolbox.git"
+  },
+  "homepage": "https://github.com/Vincentwei1021/agent-toolbox#readme",
+  "bugs": {
+    "url": "https://github.com/Vincentwei1021/agent-toolbox/issues"
   }
 }
