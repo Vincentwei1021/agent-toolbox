@@ -15,11 +15,16 @@ export async function usageTrackingMiddleware(c: Context, next: Next): Promise<R
 
   const path = new URL(c.req.url).pathname;
   const responseTimeMs = Date.now() - startTime;
+  const statusCode = c.res?.status ?? 0;
+  const ip =
+    c.req.header("x-forwarded-for")?.split(",")[0]?.trim() ||
+    c.req.header("x-real-ip") ||
+    "unknown";
+  const userAgent = c.req.header("user-agent") || "";
 
   try {
-    recordUsage(apiKey.id, path, responseTimeMs);
+    recordUsage(apiKey.id, path, responseTimeMs, statusCode, ip, userAgent);
   } catch {
-    // Don't fail the request if usage tracking fails
     console.error("Failed to record usage for key", apiKey.id);
   }
 }

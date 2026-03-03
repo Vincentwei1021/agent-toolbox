@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { serve } from "@hono/node-server";
 import { config } from "./config.js";
 import { getDb } from "./db.js";
+import { migrateUsageTable } from "./db.js";
 import { authMiddleware } from "./middleware/auth.js";
 import { rateLimitMiddleware } from "./middleware/rateLimit.js";
 import { loggerMiddleware } from "./middleware/logger.js";
@@ -19,10 +20,12 @@ import { billingRouter } from "./routes/billing.js";
 import { landingRouter } from "./routes/landing.js";
 import { emailRouter } from "./routes/email.js";
 import { translateRouter } from "./routes/translate.js";
+import { usageRouter } from "./routes/usage.js";
 import { closeBrowser } from "./services/browser.js";
 
 // Initialize database on startup
 getDb();
+migrateUsageTable();
 
 const app = new Hono();
 
@@ -44,6 +47,7 @@ app.route("/", financeRouter);
 app.route("/", screenshotRouter);
 app.route("/", emailRouter);
 app.route("/", translateRouter);
+app.route("/", usageRouter);
 app.route("/", docsRouter);
 
 // Error handler
