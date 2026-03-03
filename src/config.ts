@@ -29,6 +29,7 @@ export const config = {
   nodeEnv: process.env.NODE_ENV || "development",
   version: "1.0.0",
   creemApiKey: process.env.CREEM_API_KEY || "",
+  creemApiBase: process.env.CREEM_API_BASE || "https://test-api.creem.io",
   creemWebhookSecret: process.env.CREEM_WEBHOOK_SECRET || "",
   creemProductPro: process.env.CREEM_PRODUCT_PRO || "",
   creemProductScale: process.env.CREEM_PRODUCT_SCALE || "",

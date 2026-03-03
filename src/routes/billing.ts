@@ -57,31 +57,39 @@ billingRouter.post("/v1/billing/checkout", async (c) => {
 
   const productId = PLAN_PRODUCTS[plan];
 
-  // Call Creem API to create checkout session
-  const creemResponse = await fetch("https://test-api.creem.io/v1/checkouts", {
-    method: "POST",
-    headers: {
-      "x-api-key": config.creemApiKey,
-      "Content-Type": "application/json",
+  // Call Creem API to create checkout session (with retry)
+  const creemBase = config.creemApiBase || "https://test-api.creem.io";
+  const checkoutPayload = JSON.stringify({
+    product_id: productId,
+    success_url: `${c.req.url.split("/v1")[0]}/?checkout=success`,
+    customer: {
+      email: apiKey.user_email,
     },
-    body: JSON.stringify({
-      product_id: productId,
-      success_url: `${c.req.url.split("/v1")[0]}/?checkout=success`,
-      customer: {
-        email: apiKey.user_email,
-      },
-      metadata: {
-        api_key_id: String(apiKey.id),
-        plan,
-      },
-    }),
+    metadata: {
+      api_key_id: String(apiKey.id),
+      plan,
+    },
   });
 
-  if (!creemResponse.ok) {
-    const errBody = await creemResponse.text();
-    console.error("Creem checkout error:", errBody);
+  let creemResponse: Response | null = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    creemResponse = await fetch(`${creemBase}/v1/checkouts`, {
+      method: "POST",
+      headers: {
+        "x-api-key": config.creemApiKey,
+        "Content-Type": "application/json",
+      },
+      body: checkoutPayload,
+    });
+    if (creemResponse.ok || creemResponse.status < 500) break;
+    if (attempt === 0) await new Promise((r) => setTimeout(r, 1000));
+  }
+
+  if (!creemResponse || !creemResponse.ok) {
+    const errBody = await creemResponse?.text().catch(() => "unknown");
+    console.error(`Creem checkout error (${creemResponse?.status}):`, errBody);
     return c.json(
-      { success: false, error: { code: "CHECKOUT_ERROR", message: "Failed to create checkout session" } },
+      { success: false, error: { code: "CHECKOUT_ERROR", message: `Failed to create checkout session (${creemResponse?.status})` } },
       500
     );
   }
