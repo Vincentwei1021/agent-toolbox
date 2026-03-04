@@ -705,7 +705,7 @@ const landingHTML = `<!DOCTYPE html>
     <a href="/" class="nav-logo"><span class="icon">&#9889;</span> Agent Toolbox</a>
     <button class="nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
     <div class="nav-links">
-      <a href="/v1/docs">Docs</a>
+      <a href="/docs">Docs</a>
       <a href="/playground">Playground</a>
       <a href="#pricing">Pricing</a>
       <a href="#get-started" class="nav-cta">Get API Key</a>
@@ -1126,7 +1126,7 @@ console<span class="tk-punct">.</span>log<span class="tk-punct">(</span>data<spa
   <div class="container footer-inner">
     <div class="footer-brand">&#9889; Agent Toolbox &copy; 2025</div>
     <div class="footer-links">
-      <a href="/v1/docs">Docs</a>
+      <a href="/docs">Docs</a>
       <a href="/playground">Playground</a>
       <a href="https://github.com/agenttoolbox">GitHub</a>
       <a href="#pricing">Pricing</a>
