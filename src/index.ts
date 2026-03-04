@@ -1,5 +1,6 @@
 import { Hono } from "hono";
-import { serve } from "@hono/node-server";
+import { getRequestListener } from "@hono/node-server";
+import { createServer } from "node:http";
 import { config } from "./config.js";
 import { getDb } from "./db.js";
 import { migrateUsageTable } from "./db.js";
@@ -27,6 +28,7 @@ import { usageRouter } from "./routes/usage.js";
 import { playgroundRouter } from "./routes/playground.js";
 import { docsPageRouter } from "./routes/docsPage.js";
 import { closeBrowser } from "./services/browser.js";
+import { handleSseRequest, handleMessageRequest } from "./mcp-sse.js";
 
 // Initialize database on startup
 getDb();
@@ -63,14 +65,60 @@ app.route("/", docsRouter);
 // Error handler
 app.onError(errorHandler);
 
-// Start server
-const server = serve({
-  fetch: app.fetch,
-  port: config.port,
+// Hono request handler for Node.js
+const honoListener = getRequestListener(app.fetch);
+
+// Raw Node HTTP server — intercepts MCP SSE paths, delegates rest to Hono
+const server = createServer(async (req, res) => {
+  const url = new URL(req.url || "/", `http://${req.headers.host || "localhost"}`);
+  const path = url.pathname;
+
+  // CORS preflight for MCP endpoints
+  if ((path === "/sse" || path === "/messages") && req.method === "OPTIONS") {
+    res.writeHead(204, {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    });
+    res.end();
+    return;
+  }
+
+  // MCP SSE connection
+  if (path === "/sse" && req.method === "GET") {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    try {
+      await handleSseRequest(req, res);
+    } catch (err) {
+      console.error("[MCP-SSE] Error:", err);
+      if (!res.headersSent) res.writeHead(500).end("Internal error");
+    }
+    return;
+  }
+
+  // MCP message endpoint
+  if (path === "/messages" && req.method === "POST") {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    try {
+      await handleMessageRequest(req, res);
+    } catch (err) {
+      console.error("[MCP-SSE] Message error:", err);
+      if (!res.headersSent) res.writeHead(500).end("Internal error");
+    }
+    return;
+  }
+
+  // Everything else → Hono
+  honoListener(req, res);
 });
 
-console.log(`Agent Toolbox API running on http://localhost:${config.port}`);
-console.log(`Environment: ${config.nodeEnv}`);
+server.listen(config.port, () => {
+  console.log(`Agent Toolbox API running on http://localhost:${config.port}`);
+  console.log(`MCP SSE endpoint: http://localhost:${config.port}/sse`);
+  console.log(`Environment: ${config.nodeEnv}`);
+});
 
 // Graceful shutdown
 function shutdown() {

@@ -4,7 +4,7 @@ import { errorResponse } from "../utils/response.js";
 import { findApiKeyByKey, getMonthlyUsage } from "../db.js";
 import type { ApiKeyRow } from "../db.js";
 
-const PUBLIC_PATHS = ["/health", "/v1/docs", "/v1/auth/register", "/v1/billing/webhook", "/v1/usage/summary", "/playground", "/docs", "/"];
+const PUBLIC_PATHS = ["/health", "/v1/docs", "/v1/auth/register", "/v1/billing/webhook", "/v1/usage/summary", "/playground", "/docs", "/", "/sse", "/messages"];
 
 const PLAN_LIMITS: Record<string, number> = {
   free: 1_000,
@@ -14,21 +14,28 @@ const PLAN_LIMITS: Record<string, number> = {
 };
 
 export async function authMiddleware(c: Context, next: Next): Promise<Response | void> {
-  const path = new URL(c.req.url).pathname;
+  const url = new URL(c.req.url);
+  const path = url.pathname;
 
   if (PUBLIC_PATHS.includes(path)) {
     return next();
   }
 
+  // Try Authorization header first, then fall back to ?apiKey= query param
+  let key: string | undefined;
   const authHeader = c.req.header("Authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    key = authHeader.slice(7);
+  } else {
+    key = url.searchParams.get("apiKey") || undefined;
+  }
+
+  if (!key) {
     return c.json(
       errorResponse("UNAUTHORIZED", "Missing or invalid Authorization header", path, Date.now()),
       401
     );
   }
-
-  const key = authHeader.slice(7);
 
   // Admin/env key fallback — treat as unlimited
   if (config.apiKeys.includes(key)) {
