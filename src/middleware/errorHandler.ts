@@ -12,6 +12,20 @@ export function errorHandler(err: Error, c: Context): Response {
     );
   }
 
+  if (err.message === "QUEUE_FULL") {
+    return c.json(
+      errorResponse("QUEUE_FULL", "Too many concurrent requests. Please try again shortly.", path, Date.now()),
+      408
+    );
+  }
+
+  if (err.message === "TIMEOUT") {
+    return c.json(
+      errorResponse("TIMEOUT", "Request timed out after 30 seconds", path, Date.now()),
+      504
+    );
+  }
+
   console.error(`Unhandled error: ${err.message}`, err.stack);
   return c.json(
     errorResponse("INTERNAL_ERROR", "An unexpected error occurred", path, Date.now()),

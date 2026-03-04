@@ -8,6 +8,8 @@ import { rateLimitMiddleware } from "./middleware/rateLimit.js";
 import { loggerMiddleware } from "./middleware/logger.js";
 import { usageTrackingMiddleware } from "./middleware/usageTracking.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import { cacheMiddleware } from "./middleware/cache.js";
+import { timeoutMiddleware } from "./middleware/timeout.js";
 import { healthRouter } from "./routes/health.js";
 import { searchRouter } from "./routes/search.js";
 import { extractRouter } from "./routes/extract.js";
@@ -34,6 +36,8 @@ const app = new Hono();
 app.use("*", loggerMiddleware);
 app.use("*", authMiddleware);
 app.use("*", rateLimitMiddleware);
+app.use("*", timeoutMiddleware);
+app.use("*", cacheMiddleware);
 app.use("*", usageTrackingMiddleware);
 
 // Routes

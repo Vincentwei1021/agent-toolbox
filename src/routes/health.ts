@@ -1,5 +1,7 @@
 import { Hono } from "hono";
 import { config } from "../config.js";
+import { getPoolStats } from "../services/browser.js";
+import { responseCache } from "../services/cache.js";
 
 const healthRouter = new Hono();
 
@@ -11,6 +13,8 @@ healthRouter.get("/health", (c) => {
     uptime: Math.round((Date.now() - startedAt) / 1000),
     version: config.version,
     timestamp: new Date().toISOString(),
+    cache: responseCache.stats,
+    browserPool: getPoolStats(),
   });
 });
 

@@ -1,4 +1,4 @@
-import { getBrowser } from "./browser.js";
+import { acquireContext, releaseContext } from "./browser.js";
 
 export interface ScreenshotInput {
   url: string;
@@ -25,12 +25,12 @@ export async function takeScreenshot(input: ScreenshotInput): Promise<Screenshot
   const clampedWidth = Math.min(width, 1920);
   const clampedHeight = Math.min(height, 1080);
 
-  const browser = await getBrowser();
-  const page = await browser.newPage();
+  const ctx = await acquireContext();
+  const page = await ctx.newPage();
 
   try {
     await page.setViewportSize({ width: clampedWidth, height: clampedHeight });
-    await page.goto(url, { timeout: 30_000, waitUntil: "domcontentloaded" });
+    await page.goto(url, { timeout: 25_000, waitUntil: "domcontentloaded" });
 
     const screenshotBuffer = await page.screenshot({
       type: "png",
@@ -48,5 +48,6 @@ export async function takeScreenshot(input: ScreenshotInput): Promise<Screenshot
     };
   } finally {
     await page.close();
+    releaseContext(ctx);
   }
 }
