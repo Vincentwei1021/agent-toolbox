@@ -12,6 +12,10 @@ import { validateEmail } from "./services/email.js";
 import { translateText, translateBatch } from "./services/translate.js";
 import { lookupGeoIp } from "./services/geoip.js";
 import { searchNews } from "./services/news.js";
+import { lookupWhois } from "./services/whois.js";
+import { lookupDns } from "./services/dns.js";
+import { extractPdf } from "./services/pdfExtract.js";
+import { generateQr } from "./services/qrcode.js";
 
 // Track active transports by sessionId
 const transports = new Map<string, SSEServerTransport>();
@@ -136,6 +140,56 @@ function createMcpServer(): McpServer {
     async ({ query, language, country, category, limit }) => ({
       content: [{ type: "text" as const, text: JSON.stringify(await searchNews({ query, language, country, category, limit }), null, 2) }],
     })
+  );
+
+  server.tool(
+    "whois",
+    "WHOIS domain lookup — registrar, dates, nameservers, registrant",
+    { domain: z.string().describe("Domain name to look up") },
+    async ({ domain }) => ({
+      content: [{ type: "text" as const, text: JSON.stringify(await lookupWhois({ domain }), null, 2) }],
+    })
+  );
+
+  server.tool(
+    "dns",
+    "DNS record lookup — A, AAAA, CNAME, MX, NS, TXT, SOA, SRV, CAA",
+    {
+      domain: z.string().describe("Domain to query"),
+      type: z.string().default("A").describe("Record type: A, AAAA, CNAME, MX, NS, TXT, SOA, SRV, CAA"),
+    },
+    async ({ domain, type }) => ({
+      content: [{ type: "text" as const, text: JSON.stringify(await lookupDns({ domain, type }), null, 2) }],
+    })
+  );
+
+  server.tool(
+    "pdf_extract",
+    "Extract text from a PDF URL",
+    {
+      url: z.string().url().describe("PDF URL to extract text from"),
+      maxPages: z.number().optional().describe("Max pages to extract"),
+    },
+    async ({ url, maxPages }) => ({
+      content: [{ type: "text" as const, text: JSON.stringify(await extractPdf({ url, maxPages }), null, 2) }],
+    })
+  );
+
+  server.tool(
+    "qr_generate",
+    "Generate a QR code (PNG base64 or SVG)",
+    {
+      text: z.string().describe("Text/URL to encode"),
+      format: z.enum(["png", "svg"]).default("png").describe("Output format"),
+      width: z.number().min(100).max(1000).default(300).describe("Image width in px"),
+    },
+    async ({ text, format, width }) => {
+      const result = await generateQr({ text, format, width });
+      if (result.format === "svg") {
+        return { content: [{ type: "text" as const, text: result.data }] };
+      }
+      return { content: [{ type: "image" as const, data: result.data, mimeType: "image/png" }] };
+    }
   );
   return server;
 }
