@@ -94,4 +94,5 @@ export const CACHE_TTL: Record<string, number> = {
   "/v1/screenshot": 60 * 60 * 1000,    // 1 hour
   "/v1/validate-email": 60 * 60 * 1000,// 1 hour
   "/v1/translate": 60 * 60 * 1000,     // 1 hour
+  "/v1/geoip": 60 * 60 * 1000,        // 1 hour
 };

@@ -660,6 +660,62 @@ export const openApiSpec = {
         },
       },
     },
+    "/v1/geoip": {
+      post: {
+        tags: ["GeoIP"],
+        summary: "IP geolocation lookup",
+        description: "Returns geographic location data for an IP address including country, city, region, coordinates, timezone, and ISP information. Uses ip-api.com with 1-hour response caching.",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["ip"],
+                properties: {
+                  ip: { type: "string", description: "IPv4 or IPv6 address to look up", example: "8.8.8.8" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "GeoIP lookup result",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    data: {
+                      type: "object",
+                      properties: {
+                        ip: { type: "string", example: "8.8.8.8" },
+                        country: { type: "string", example: "United States" },
+                        countryCode: { type: "string", example: "US" },
+                        region: { type: "string", example: "VA" },
+                        regionName: { type: "string", example: "Virginia" },
+                        city: { type: "string", example: "Ashburn" },
+                        zip: { type: "string", example: "20149" },
+                        lat: { type: "number", example: 39.03 },
+                        lon: { type: "number", example: -77.5 },
+                        timezone: { type: "string", example: "America/New_York" },
+                        isp: { type: "string", example: "Google LLC" },
+                        org: { type: "string", example: "Google Public DNS" },
+                        as: { type: "string", example: "AS15169 Google LLC" },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "Invalid IP or private IP", content: { "application/json": { schema: { "$ref": "#/components/schemas/ErrorResponse" } } } },
+          "401": { description: "Unauthorized" },
+        },
+      },
+    },
     "/v1/docs": {
       get: {
         tags: ["System"],
