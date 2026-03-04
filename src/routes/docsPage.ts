@@ -116,6 +116,7 @@ td code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:12
   <a href="#finance">Finance</a>
   <a href="#validate-email">Email Validation</a>
   <a href="#translate">Translate</a>
+  <a href="#news">News</a>
   <h4>Integrations</h4>
   <a href="#mcp">MCP Server</a>
   <a href="#langchain">LangChain</a>
@@ -479,6 +480,38 @@ data.translations.forEach(t => console.log(t.translation));
 // &#12371;&#12435;&#12395;&#12385;&#12399;
 // &#12373;&#12424;&#12358;&#12394;&#12425;</pre></div></div></div>
 
+<!-- NEWS -->
+<h2 id="news">POST /v1/news</h2>
+<div class="endpoint">
+  <span class="badge badge-post">POST</span>
+  <div class="endpoint-path">/v1/news</div>
+  <p>Search and aggregate news articles from Google News. Filter by language, country, and category.</p>
+</div>
+<table>
+<tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+<tr><td><code>query</code></td><td>string</td><td>Yes</td><td>News search query</td></tr>
+<tr><td><code>language</code></td><td>string</td><td>No</td><td>Language code (default "en")</td></tr>
+<tr><td><code>country</code></td><td>string</td><td>No</td><td>Country code (default "us")</td></tr>
+<tr><td><code>category</code></td><td>string</td><td>No</td><td>business, technology, science, health, sports, entertainment, general</td></tr>
+<tr><td><code>limit</code></td><td>integer</td><td>No</td><td>Results count (1-50, default 10)</td></tr>
+</table>
+<div class="tabs" data-group="news"><div class="tab active" onclick="switchTab(this,'news')">curl</div><div class="tab" onclick="switchTab(this,'news')">Python</div><div class="tab" onclick="switchTab(this,'news')">JavaScript</div></div>
+<div class="tab-content active" data-group="news"><div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.sendtoclaw.com/v1/news \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"query": "artificial intelligence", "category": "technology", "limit": 5}'</pre></div></div></div>
+<div class="tab-content" data-group="news"><div class="code-block"><div class="code-header"><span class="lang">Python</span></div><div class="code-body"><pre>resp = httpx.post("https://api.sendtoclaw.com/v1/news",
+    headers={"Authorization": "Bearer YOUR_API_KEY"},
+    json={"query": "artificial intelligence", "category": "technology", "limit": 5})
+for article in resp.json()["data"]["results"]:
+    print(f"{article['source']}: {article['title']}")</pre></div></div></div>
+<div class="tab-content" data-group="news"><div class="code-block"><div class="code-header"><span class="lang">JavaScript</span></div><div class="code-body"><pre>const { data } = await fetch("https://api.sendtoclaw.com/v1/news", {
+  method: "POST",
+  headers: { "Authorization": "Bearer YOUR_API_KEY", "Content-Type": "application/json" },
+  body: JSON.stringify({ query: "artificial intelligence", category: "technology", limit: 5 })
+}).then(r => r.json());
+data.results.forEach(a => console.log(a.source + ": " + a.title));</pre></div></div></div>
+
 <!-- MCP SERVER -->
 <h2 id="mcp">MCP Server Integration</h2>
 <p>Use Agent Toolbox as an <a href="https://modelcontextprotocol.io">MCP server</a> in Claude Desktop, Cursor, Windsurf, or any MCP client.</p>
@@ -517,6 +550,7 @@ data.translations.forEach(t => console.log(t.translation));
 <tr><td><code>finance</code></td><td>Stocks &amp; exchange</td></tr>
 <tr><td><code>validate_email</code></td><td>Email validation</td></tr>
 <tr><td><code>translate</code></td><td>Text translation</td></tr>
+<tr><td><code>news</code></td><td>News article search</td></tr>
 </table>
 
 <!-- LANGCHAIN -->

@@ -24,9 +24,11 @@ import { landingRouter } from "./routes/landing.js";
 import { emailRouter } from "./routes/email.js";
 import { translateRouter } from "./routes/translate.js";
 import { geoipRouter } from "./routes/geoip.js";
+import { newsRouter } from "./routes/news.js";
 import { usageRouter } from "./routes/usage.js";
 import { playgroundRouter } from "./routes/playground.js";
 import { docsPageRouter } from "./routes/docsPage.js";
+import { serverCardRouter } from "./routes/serverCard.js";
 import { closeBrowser } from "./services/browser.js";
 import { handleSseRequest, handleMessageRequest } from "./mcp-sse.js";
 
@@ -57,9 +59,11 @@ app.route("/", screenshotRouter);
 app.route("/", emailRouter);
 app.route("/", translateRouter);
 app.route("/", geoipRouter);
+app.route("/", newsRouter);
 app.route("/", usageRouter);
 app.route("/", playgroundRouter);
 app.route("/", docsPageRouter);
+app.route("/", serverCardRouter);
 app.route("/", docsRouter);
 
 // Error handler

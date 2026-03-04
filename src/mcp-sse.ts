@@ -11,6 +11,7 @@ import { takeScreenshot } from "./services/screenshot.js";
 import { validateEmail } from "./services/email.js";
 import { translateText, translateBatch } from "./services/translate.js";
 import { lookupGeoIp } from "./services/geoip.js";
+import { searchNews } from "./services/news.js";
 
 // Track active transports by sessionId
 const transports = new Map<string, SSEServerTransport>();
@@ -121,6 +122,21 @@ function createMcpServer(): McpServer {
     })
   );
 
+
+  server.tool(
+    "news",
+    "Search news articles from Google News",
+    {
+      query: z.string().describe("News search query"),
+      language: z.string().default("en").describe("Language code"),
+      country: z.string().default("us").describe("Country code"),
+      category: z.enum(["business", "technology", "science", "health", "sports", "entertainment", "general"]).optional().describe("News category"),
+      limit: z.number().min(1).max(50).default(10).describe("Number of results"),
+    },
+    async ({ query, language, country, category, limit }) => ({
+      content: [{ type: "text" as const, text: JSON.stringify(await searchNews({ query, language, country, category, limit }), null, 2) }],
+    })
+  );
   return server;
 }
 

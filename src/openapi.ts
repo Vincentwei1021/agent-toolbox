@@ -660,6 +660,70 @@ export const openApiSpec = {
         },
       },
     },
+    "/v1/news": {
+      post: {
+        tags: ["News"],
+        summary: "Search news articles",
+        description: "Search and aggregate news articles from Google News. Supports language, country, and category filtering.",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["query"],
+                properties: {
+                  query: { type: "string", description: "News search query", example: "artificial intelligence" },
+                  language: { type: "string", description: "Language code (default: en)", example: "en" },
+                  country: { type: "string", description: "Country code (default: us)", example: "us" },
+                  category: { type: "string", enum: ["business", "technology", "science", "health", "sports", "entertainment", "general"], description: "News category filter" },
+                  limit: { type: "integer", description: "Number of results (1-50, default 10)", minimum: 1, maximum: 50, example: 10 },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "News search results",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    data: {
+                      type: "object",
+                      properties: {
+                        results: {
+                          type: "array",
+                          items: {
+                            type: "object",
+                            properties: {
+                              title: { type: "string", example: "OpenAI Releases GPT-5" },
+                              description: { type: "string", example: "The latest model brings..." },
+                              url: { type: "string", example: "https://example.com/article" },
+                              source: { type: "string", example: "TechCrunch" },
+                              publishedAt: { type: "string", example: "2026-03-04T08:00:00.000Z" },
+                              image: { type: "string", nullable: true },
+                            },
+                          },
+                        },
+                        query: { type: "string" },
+                        language: { type: "string" },
+                        country: { type: "string" },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "400": { description: "Validation error", content: { "application/json": { schema: { "$ref": "#/components/schemas/ErrorResponse" } } } },
+          "401": { description: "Unauthorized" },
+        },
+      },
+    },
     "/v1/geoip": {
       post: {
         tags: ["GeoIP"],
