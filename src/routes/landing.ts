@@ -6,7 +6,17 @@ const landingHTML = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Production-ready REST API with 13 tools for AI agents: search, extract, weather, finance, screenshot, translate, news, WHOIS, DNS, PDF, QR and more. Free tier, MCP server, LangChain & LlamaIndex integrations.">
+<meta name="keywords" content="AI agent tools, API, MCP server, LangChain, LlamaIndex, web search, web scraping, screenshot API, weather API, translate API">
+<meta property="og:title" content="Agent Toolbox — 13 Tools for AI Agents">
+<meta property="og:description" content="Give your AI agents real-world superpowers. Search, extract, screenshot, translate, and more — one API key, zero complexity.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://api.sendtoclaw.com">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Agent Toolbox — 13 Tools for AI Agents">
+<meta name="twitter:description" content="Production-ready REST API for AI agents. 13 endpoints, MCP server, LangChain integration. Free tier available.">
+<link rel="canonical" href="https://api.sendtoclaw.com">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agent Toolbox — Production-Ready APIs for AI Agents</title>
   <meta name="description" content="Search the web, extract content, capture screenshots, get weather and financial data — all through a single, fast API built for developers and AI agents.">
   <link rel="preconnect" href="https://fonts.googleapis.com">

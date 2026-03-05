@@ -32,6 +32,7 @@ import { qrcodeRouter } from "./routes/qrcode.js";
 import { usageRouter } from "./routes/usage.js";
 import { playgroundRouter } from "./routes/playground.js";
 import { docsPageRouter } from "./routes/docsPage.js";
+import { seoRouter } from "./routes/seo.js";
 import { serverCardRouter } from "./routes/serverCard.js";
 import { closeBrowser } from "./services/browser.js";
 import { handleSseRequest, handleMessageRequest } from "./mcp-sse.js";
@@ -71,6 +72,7 @@ app.route("/", qrcodeRouter);
 app.route("/", usageRouter);
 app.route("/", playgroundRouter);
 app.route("/", docsPageRouter);
+app.route("/", seoRouter);
 app.route("/", serverCardRouter);
 app.route("/", docsRouter);
 

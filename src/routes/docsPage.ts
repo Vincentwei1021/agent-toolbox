@@ -6,6 +6,15 @@ const docsHTML = `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="description" content="Complete API documentation for Agent Toolbox — 13 endpoints with curl, Python, and JavaScript examples. MCP server, LangChain, and LlamaIndex integration guides.">
+<meta property="og:title" content="Agent Toolbox Documentation">
+<meta property="og:description" content="API reference for 13 AI agent tools with interactive code examples in curl, Python, and JavaScript.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://api.sendtoclaw.com/docs">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Agent Toolbox Documentation">
+<meta name="twitter:description" content="Complete API docs for 13 AI agent tools — search, extract, weather, screenshot, translate, and more.">
+<link rel="canonical" href="https://api.sendtoclaw.com/docs">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Documentation — Agent Toolbox</title>
 <style>

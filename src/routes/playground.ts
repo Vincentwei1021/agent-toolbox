@@ -174,6 +174,62 @@ const ENDPOINTS = [
   },
   {
     method: "POST", path: "/v1/translate", name: "Translate",
+    desc: "Translate text between languages",
+    params: [
+      {key:"text",type:"text",placeholder:"Hello, how are you?",required:true},
+      {key:"target",type:"text",placeholder:"zh",required:true},
+      {key:"source",type:"text",placeholder:"auto",default:"auto"},
+    ]
+  },
+  {
+    method: "POST", path: "/v1/geoip", name: "GeoIP",
+    desc: "IP geolocation lookup",
+    params: [
+      {key:"ip",type:"text",placeholder:"8.8.8.8",required:true},
+    ]
+  },
+  {
+    method: "POST", path: "/v1/news", name: "News Search",
+    desc: "Search news articles",
+    params: [
+      {key:"query",type:"text",placeholder:"artificial intelligence",required:true},
+      {key:"category",type:"select",options:["","business","technology","science","health","sports","entertainment","general"],default:""},
+      {key:"language",type:"text",placeholder:"en",default:"en"},
+      {key:"limit",type:"number",placeholder:"5",default:"5"},
+    ]
+  },
+  {
+    method: "POST", path: "/v1/whois", name: "WHOIS",
+    desc: "Domain WHOIS lookup",
+    params: [
+      {key:"domain",type:"text",placeholder:"google.com",required:true},
+    ]
+  },
+  {
+    method: "POST", path: "/v1/dns", name: "DNS Lookup",
+    desc: "DNS record query",
+    params: [
+      {key:"domain",type:"text",placeholder:"google.com",required:true},
+      {key:"type",type:"select",options:["A","AAAA","CNAME","MX","NS","TXT","SOA","SRV","CAA"],default:"A"},
+    ]
+  },
+  {
+    method: "POST", path: "/v1/pdf-extract", name: "PDF Extract",
+    desc: "Extract text from a PDF URL",
+    params: [
+      {key:"url",type:"text",placeholder:"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",required:true},
+      {key:"maxPages",type:"number",placeholder:"10"},
+    ]
+  },
+  {
+    method: "POST", path: "/v1/qr", name: "QR Code",
+    desc: "Generate QR code",
+    params: [
+      {key:"text",type:"text",placeholder:"https://agenttoolbox.dev",required:true},
+      {key:"format",type:"select",options:["png","svg"],default:"png"},
+      {key:"width",type:"number",placeholder:"300",default:"300"},
+    ]
+  },
     desc: "Translate text with auto-detect",
     params: [
       {key:"text",type:"text",placeholder:"Hello, how are you?",required:true},
