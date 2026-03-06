@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "langchain-agent-toolbox"
-version = "0.1.0"
-description = "LangChain integration for Agent Toolbox API — search, extract, screenshot, weather, finance, email validation, and translation tools for AI agents"
+version = "0.2.0"
+description = "LangChain integration for Agent Toolbox API — 13 tools for AI agents: search, extract, screenshot, weather, finance, news, translate, geoip, whois, dns, pdf-extract, and qr code generation"
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.9"

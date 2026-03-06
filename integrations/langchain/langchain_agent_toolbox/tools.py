@@ -362,3 +362,258 @@ class AgentToolboxTranslateTool(BaseTool):
         result = await client.apost("/v1/translate", payload)
         data = result.get("data", {})
         return data.get("translation", json.dumps(data, indent=2))
+
+
+# ---------------------------------------------------------------------------
+# GeoIP
+# ---------------------------------------------------------------------------
+
+class GeoIPInput(BaseModel):
+    ip: str = Field(description="IP address to geolocate")
+
+
+class AgentToolboxGeoIPTool(BaseTool):
+    """Look up geolocation information for an IP address."""
+
+    name: str = "agent_toolbox_geoip"
+    description: str = (
+        "Get geolocation data for an IP address including country, city, "
+        "ISP, coordinates, and timezone."
+    )
+    args_schema: Type[BaseModel] = GeoIPInput
+    api_key: Optional[str] = None
+    base_url: Optional[str] = None
+
+    def _run(self, ip: str, run_manager: Optional[CallbackManagerForToolRun] = None) -> str:
+        client = _get_client(self.api_key, self.base_url)
+        result = client.post("/v1/geoip", {"ip": ip})
+        return json.dumps(result.get("data", {}), indent=2)
+
+    async def _arun(self, ip: str, run_manager: Optional[AsyncCallbackManagerForToolRun] = None) -> str:
+        client = _get_client(self.api_key, self.base_url)
+        result = await client.apost("/v1/geoip", {"ip": ip})
+        return json.dumps(result.get("data", {}), indent=2)
+
+
+# ---------------------------------------------------------------------------
+# News
+# ---------------------------------------------------------------------------
+
+class NewsInput(BaseModel):
+    query: str = Field(description="News search query")
+    category: Optional[str] = Field(default=None, description="Category: business, technology, science, health, sports, entertainment, general")
+    language: str = Field(default="en", description="Language code (e.g. en, zh, ja)")
+    limit: int = Field(default=5, description="Number of articles (1-20)")
+
+
+class AgentToolboxNewsTool(BaseTool):
+    """Search for recent news articles."""
+
+    name: str = "agent_toolbox_news"
+    description: str = (
+        "Search for recent news articles on any topic. "
+        "Returns titles, sources, URLs, and publication dates. "
+        "Supports category filtering and multiple languages."
+    )
+    args_schema: Type[BaseModel] = NewsInput
+    api_key: Optional[str] = None
+    base_url: Optional[str] = None
+
+    def _run(
+        self, query: str, category: Optional[str] = None,
+        language: str = "en", limit: int = 5,
+        run_manager: Optional[CallbackManagerForToolRun] = None,
+    ) -> str:
+        client = _get_client(self.api_key, self.base_url)
+        payload: Dict[str, Any] = {"query": query, "language": language, "limit": limit}
+        if category:
+            payload["category"] = category
+        result = client.post("/v1/news", payload)
+        return json.dumps(result.get("data", {}), indent=2)
+
+    async def _arun(
+        self, query: str, category: Optional[str] = None,
+        language: str = "en", limit: int = 5,
+        run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
+    ) -> str:
+        client = _get_client(self.api_key, self.base_url)
+        payload: Dict[str, Any] = {"query": query, "language": language, "limit": limit}
+        if category:
+            payload["category"] = category
+        result = await client.apost("/v1/news", payload)
+        return json.dumps(result.get("data", {}), indent=2)
+
+
+# ---------------------------------------------------------------------------
+# WHOIS
+# ---------------------------------------------------------------------------
+
+class WhoisInput(BaseModel):
+    domain: str = Field(description="Domain name to look up (e.g. google.com)")
+
+
+class AgentToolboxWhoisTool(BaseTool):
+    """Look up WHOIS information for a domain."""
+
+    name: str = "agent_toolbox_whois"
+    description: str = (
+        "Get WHOIS registration data for a domain including registrar, "
+        "creation date, expiry date, name servers, and registrant info."
+    )
+    args_schema: Type[BaseModel] = WhoisInput
+    api_key: Optional[str] = None
+    base_url: Optional[str] = None
+
+    def _run(self, domain: str, run_manager: Optional[CallbackManagerForToolRun] = None) -> str:
+        client = _get_client(self.api_key, self.base_url)
+        result = client.post("/v1/whois", {"domain": domain})
+        return json.dumps(result.get("data", {}), indent=2)
+
+    async def _arun(self, domain: str, run_manager: Optional[AsyncCallbackManagerForToolRun] = None) -> str:
+        client = _get_client(self.api_key, self.base_url)
+        result = await client.apost("/v1/whois", {"domain": domain})
+        return json.dumps(result.get("data", {}), indent=2)
+
+
+# ---------------------------------------------------------------------------
+# DNS
+# ---------------------------------------------------------------------------
+
+class DnsInput(BaseModel):
+    domain: str = Field(description="Domain name to query")
+    type: str = Field(default="A", description="DNS record type: A, AAAA, CNAME, MX, NS, TXT, SOA, SRV, CAA")
+
+
+class AgentToolboxDnsTool(BaseTool):
+    """Query DNS records for a domain."""
+
+    name: str = "agent_toolbox_dns"
+    description: str = (
+        "Query DNS records for a domain. Supports A, AAAA, CNAME, MX, NS, "
+        "TXT, SOA, SRV, and CAA record types."
+    )
+    args_schema: Type[BaseModel] = DnsInput
+    api_key: Optional[str] = None
+    base_url: Optional[str] = None
+
+    def _run(self, domain: str, type: str = "A", run_manager: Optional[CallbackManagerForToolRun] = None) -> str:
+        client = _get_client(self.api_key, self.base_url)
+        result = client.post("/v1/dns", {"domain": domain, "type": type})
+        return json.dumps(result.get("data", {}), indent=2)
+
+    async def _arun(self, domain: str, type: str = "A", run_manager: Optional[AsyncCallbackManagerForToolRun] = None) -> str:
+        client = _get_client(self.api_key, self.base_url)
+        result = await client.apost("/v1/dns", {"domain": domain, "type": type})
+        return json.dumps(result.get("data", {}), indent=2)
+
+
+# ---------------------------------------------------------------------------
+# PDF Extract
+# ---------------------------------------------------------------------------
+
+class PdfExtractInput(BaseModel):
+    url: str = Field(description="URL of the PDF file to extract text from")
+    maxPages: Optional[int] = Field(default=None, description="Maximum number of pages to extract")
+
+
+class AgentToolboxPdfExtractTool(BaseTool):
+    """Extract text content from a PDF file."""
+
+    name: str = "agent_toolbox_pdf_extract"
+    description: str = (
+        "Extract text content from a PDF file given its URL. "
+        "Supports up to 10MB files. Returns plain text from all pages."
+    )
+    args_schema: Type[BaseModel] = PdfExtractInput
+    api_key: Optional[str] = None
+    base_url: Optional[str] = None
+
+    def _run(self, url: str, maxPages: Optional[int] = None, run_manager: Optional[CallbackManagerForToolRun] = None) -> str:
+        client = _get_client(self.api_key, self.base_url)
+        payload: Dict[str, Any] = {"url": url}
+        if maxPages is not None:
+            payload["maxPages"] = maxPages
+        result = client.post("/v1/pdf-extract", payload)
+        data = result.get("data", {})
+        return data.get("text", json.dumps(data, indent=2))
+
+    async def _arun(self, url: str, maxPages: Optional[int] = None, run_manager: Optional[AsyncCallbackManagerForToolRun] = None) -> str:
+        client = _get_client(self.api_key, self.base_url)
+        payload: Dict[str, Any] = {"url": url}
+        if maxPages is not None:
+            payload["maxPages"] = maxPages
+        result = await client.apost("/v1/pdf-extract", payload)
+        data = result.get("data", {})
+        return data.get("text", json.dumps(data, indent=2))
+
+
+# ---------------------------------------------------------------------------
+# QR Code
+# ---------------------------------------------------------------------------
+
+class QrInput(BaseModel):
+    text: str = Field(description="Text or URL to encode in the QR code")
+    format: str = Field(default="png", description="Output format: png or svg")
+    width: int = Field(default=300, description="Image width in pixels")
+
+
+class AgentToolboxQrTool(BaseTool):
+    """Generate a QR code image."""
+
+    name: str = "agent_toolbox_qr"
+    description: str = (
+        "Generate a QR code image from text or a URL. "
+        "Returns base64-encoded PNG or SVG data."
+    )
+    args_schema: Type[BaseModel] = QrInput
+    api_key: Optional[str] = None
+    base_url: Optional[str] = None
+
+    def _run(self, text: str, format: str = "png", width: int = 300, run_manager: Optional[CallbackManagerForToolRun] = None) -> str:
+        client = _get_client(self.api_key, self.base_url)
+        result = client.post("/v1/qr", {"text": text, "format": format, "width": width})
+        return json.dumps(result.get("data", {}), indent=2)
+
+    async def _arun(self, text: str, format: str = "png", width: int = 300, run_manager: Optional[AsyncCallbackManagerForToolRun] = None) -> str:
+        client = _get_client(self.api_key, self.base_url)
+        result = await client.apost("/v1/qr", {"text": text, "format": format, "width": width})
+        return json.dumps(result.get("data", {}), indent=2)
+
+
+# ---------------------------------------------------------------------------
+# Unified AgentToolbox — get all 13 tools at once
+# ---------------------------------------------------------------------------
+
+class AgentToolbox:
+    """Convenience wrapper to get all 13 Agent Toolbox tools."""
+
+    def __init__(
+        self,
+        api_key: Optional[str] = None,
+        base_url: Optional[str] = None,
+    ) -> None:
+        self.api_key = api_key
+        self.base_url = base_url
+
+    def get_tools(self) -> List[BaseTool]:
+        """Return all 13 Agent Toolbox tools as LangChain BaseTool instances."""
+        kwargs: Dict[str, Any] = {}
+        if self.api_key:
+            kwargs["api_key"] = self.api_key
+        if self.base_url:
+            kwargs["base_url"] = self.base_url
+        return [
+            AgentToolboxSearchTool(**kwargs),
+            AgentToolboxExtractTool(**kwargs),
+            AgentToolboxScreenshotTool(**kwargs),
+            AgentToolboxWeatherTool(**kwargs),
+            AgentToolboxFinanceTool(**kwargs),
+            AgentToolboxEmailValidatorTool(**kwargs),
+            AgentToolboxTranslateTool(**kwargs),
+            AgentToolboxGeoIPTool(**kwargs),
+            AgentToolboxNewsTool(**kwargs),
+            AgentToolboxWhoisTool(**kwargs),
+            AgentToolboxDnsTool(**kwargs),
+            AgentToolboxPdfExtractTool(**kwargs),
+            AgentToolboxQrTool(**kwargs),
+        ]

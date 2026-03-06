@@ -295,3 +295,216 @@ class AgentToolboxTranslateTool(_AgentToolboxBaseTool):
         data = result.get("data", {})
         content = data.get("translation", json.dumps(data, indent=2))
         return ToolOutput(content=content, tool_name=self.metadata.name, raw_input=payload, raw_output=content)
+
+
+# ---------------------------------------------------------------------------
+# GeoIP
+# ---------------------------------------------------------------------------
+
+class AgentToolboxGeoIPTool(_AgentToolboxBaseTool):
+    """Look up geolocation information for an IP address."""
+
+    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None) -> None:
+        super().__init__(
+            meta=ToolMetadata(
+                name="agent_toolbox_geoip",
+                description="Get geolocation data for an IP address including country, city, ISP, coordinates, and timezone.",
+            ),
+            api_key=api_key, base_url=base_url,
+        )
+
+    def call(self, ip: str, **kwargs: Any) -> ToolOutput:
+        result = self._client.post("/v1/geoip", {"ip": ip})
+        content = json.dumps(result.get("data", {}), indent=2)
+        return ToolOutput(content=content, tool_name=self.metadata.name, raw_input={"ip": ip}, raw_output=content)
+
+    async def acall(self, ip: str, **kwargs: Any) -> ToolOutput:
+        result = await self._client.apost("/v1/geoip", {"ip": ip})
+        content = json.dumps(result.get("data", {}), indent=2)
+        return ToolOutput(content=content, tool_name=self.metadata.name, raw_input={"ip": ip}, raw_output=content)
+
+
+# ---------------------------------------------------------------------------
+# News
+# ---------------------------------------------------------------------------
+
+class AgentToolboxNewsTool(_AgentToolboxBaseTool):
+    """Search for recent news articles."""
+
+    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None) -> None:
+        super().__init__(
+            meta=ToolMetadata(
+                name="agent_toolbox_news",
+                description="Search for recent news articles on any topic. Returns titles, sources, URLs, and publication dates.",
+            ),
+            api_key=api_key, base_url=base_url,
+        )
+
+    def call(self, query: str, category: Optional[str] = None, language: str = "en", limit: int = 5, **kwargs: Any) -> ToolOutput:
+        payload: Dict[str, Any] = {"query": query, "language": language, "limit": limit}
+        if category:
+            payload["category"] = category
+        result = self._client.post("/v1/news", payload)
+        content = json.dumps(result.get("data", {}), indent=2)
+        return ToolOutput(content=content, tool_name=self.metadata.name, raw_input=payload, raw_output=content)
+
+    async def acall(self, query: str, category: Optional[str] = None, language: str = "en", limit: int = 5, **kwargs: Any) -> ToolOutput:
+        payload: Dict[str, Any] = {"query": query, "language": language, "limit": limit}
+        if category:
+            payload["category"] = category
+        result = await self._client.apost("/v1/news", payload)
+        content = json.dumps(result.get("data", {}), indent=2)
+        return ToolOutput(content=content, tool_name=self.metadata.name, raw_input=payload, raw_output=content)
+
+
+# ---------------------------------------------------------------------------
+# WHOIS
+# ---------------------------------------------------------------------------
+
+class AgentToolboxWhoisTool(_AgentToolboxBaseTool):
+    """Look up WHOIS information for a domain."""
+
+    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None) -> None:
+        super().__init__(
+            meta=ToolMetadata(
+                name="agent_toolbox_whois",
+                description="Get WHOIS registration data for a domain including registrar, creation date, expiry date, name servers, and registrant info.",
+            ),
+            api_key=api_key, base_url=base_url,
+        )
+
+    def call(self, domain: str, **kwargs: Any) -> ToolOutput:
+        result = self._client.post("/v1/whois", {"domain": domain})
+        content = json.dumps(result.get("data", {}), indent=2)
+        return ToolOutput(content=content, tool_name=self.metadata.name, raw_input={"domain": domain}, raw_output=content)
+
+    async def acall(self, domain: str, **kwargs: Any) -> ToolOutput:
+        result = await self._client.apost("/v1/whois", {"domain": domain})
+        content = json.dumps(result.get("data", {}), indent=2)
+        return ToolOutput(content=content, tool_name=self.metadata.name, raw_input={"domain": domain}, raw_output=content)
+
+
+# ---------------------------------------------------------------------------
+# DNS
+# ---------------------------------------------------------------------------
+
+class AgentToolboxDnsTool(_AgentToolboxBaseTool):
+    """Query DNS records for a domain."""
+
+    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None) -> None:
+        super().__init__(
+            meta=ToolMetadata(
+                name="agent_toolbox_dns",
+                description="Query DNS records for a domain. Supports A, AAAA, CNAME, MX, NS, TXT, SOA, SRV, and CAA record types.",
+            ),
+            api_key=api_key, base_url=base_url,
+        )
+
+    def call(self, domain: str, type: str = "A", **kwargs: Any) -> ToolOutput:
+        result = self._client.post("/v1/dns", {"domain": domain, "type": type})
+        content = json.dumps(result.get("data", {}), indent=2)
+        return ToolOutput(content=content, tool_name=self.metadata.name, raw_input={"domain": domain, "type": type}, raw_output=content)
+
+    async def acall(self, domain: str, type: str = "A", **kwargs: Any) -> ToolOutput:
+        result = await self._client.apost("/v1/dns", {"domain": domain, "type": type})
+        content = json.dumps(result.get("data", {}), indent=2)
+        return ToolOutput(content=content, tool_name=self.metadata.name, raw_input={"domain": domain, "type": type}, raw_output=content)
+
+
+# ---------------------------------------------------------------------------
+# PDF Extract
+# ---------------------------------------------------------------------------
+
+class AgentToolboxPdfExtractTool(_AgentToolboxBaseTool):
+    """Extract text content from a PDF file."""
+
+    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None) -> None:
+        super().__init__(
+            meta=ToolMetadata(
+                name="agent_toolbox_pdf_extract",
+                description="Extract text content from a PDF file given its URL. Supports up to 10MB files.",
+            ),
+            api_key=api_key, base_url=base_url,
+        )
+
+    def call(self, url: str, maxPages: Optional[int] = None, **kwargs: Any) -> ToolOutput:
+        payload: Dict[str, Any] = {"url": url}
+        if maxPages is not None:
+            payload["maxPages"] = maxPages
+        result = self._client.post("/v1/pdf-extract", payload)
+        data = result.get("data", {})
+        content = data.get("text", json.dumps(data, indent=2))
+        return ToolOutput(content=content, tool_name=self.metadata.name, raw_input=payload, raw_output=content)
+
+    async def acall(self, url: str, maxPages: Optional[int] = None, **kwargs: Any) -> ToolOutput:
+        payload: Dict[str, Any] = {"url": url}
+        if maxPages is not None:
+            payload["maxPages"] = maxPages
+        result = await self._client.apost("/v1/pdf-extract", payload)
+        data = result.get("data", {})
+        content = data.get("text", json.dumps(data, indent=2))
+        return ToolOutput(content=content, tool_name=self.metadata.name, raw_input=payload, raw_output=content)
+
+
+# ---------------------------------------------------------------------------
+# QR Code
+# ---------------------------------------------------------------------------
+
+class AgentToolboxQrTool(_AgentToolboxBaseTool):
+    """Generate a QR code image."""
+
+    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None) -> None:
+        super().__init__(
+            meta=ToolMetadata(
+                name="agent_toolbox_qr",
+                description="Generate a QR code image from text or a URL. Returns base64-encoded PNG or SVG data.",
+            ),
+            api_key=api_key, base_url=base_url,
+        )
+
+    def call(self, text: str, format: str = "png", width: int = 300, **kwargs: Any) -> ToolOutput:
+        result = self._client.post("/v1/qr", {"text": text, "format": format, "width": width})
+        content = json.dumps(result.get("data", {}), indent=2)
+        return ToolOutput(content=content, tool_name=self.metadata.name, raw_input={"text": text}, raw_output=content)
+
+    async def acall(self, text: str, format: str = "png", width: int = 300, **kwargs: Any) -> ToolOutput:
+        result = await self._client.apost("/v1/qr", {"text": text, "format": format, "width": width})
+        content = json.dumps(result.get("data", {}), indent=2)
+        return ToolOutput(content=content, tool_name=self.metadata.name, raw_input={"text": text}, raw_output=content)
+
+
+# ---------------------------------------------------------------------------
+# Unified AgentToolbox — get all 13 tools at once
+# ---------------------------------------------------------------------------
+
+from typing import List
+
+class AgentToolbox:
+    """Convenience wrapper to get all 13 Agent Toolbox tools."""
+
+    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None) -> None:
+        self.api_key = api_key
+        self.base_url = base_url
+
+    def get_tools(self) -> List[AsyncBaseTool]:
+        """Return all 13 Agent Toolbox tools as LlamaIndex tool instances."""
+        kw = {}
+        if self.api_key:
+            kw["api_key"] = self.api_key
+        if self.base_url:
+            kw["base_url"] = self.base_url
+        return [
+            AgentToolboxSearchTool(**kw),
+            AgentToolboxExtractTool(**kw),
+            AgentToolboxScreenshotTool(**kw),
+            AgentToolboxWeatherTool(**kw),
+            AgentToolboxFinanceTool(**kw),
+            AgentToolboxEmailValidatorTool(**kw),
+            AgentToolboxTranslateTool(**kw),
+            AgentToolboxGeoIPTool(**kw),
+            AgentToolboxNewsTool(**kw),
+            AgentToolboxWhoisTool(**kw),
+            AgentToolboxDnsTool(**kw),
+            AgentToolboxPdfExtractTool(**kw),
+            AgentToolboxQrTool(**kw),
+        ]

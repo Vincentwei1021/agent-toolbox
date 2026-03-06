@@ -1,6 +1,7 @@
 """LangChain integration for Agent Toolbox API."""
 
 from langchain_agent_toolbox.tools import (
+    AgentToolbox,
     AgentToolboxSearchTool,
     AgentToolboxExtractTool,
     AgentToolboxScreenshotTool,
@@ -8,9 +9,16 @@ from langchain_agent_toolbox.tools import (
     AgentToolboxFinanceTool,
     AgentToolboxEmailValidatorTool,
     AgentToolboxTranslateTool,
+    AgentToolboxGeoIPTool,
+    AgentToolboxNewsTool,
+    AgentToolboxWhoisTool,
+    AgentToolboxDnsTool,
+    AgentToolboxPdfExtractTool,
+    AgentToolboxQrTool,
 )
 
 __all__ = [
+    "AgentToolbox",
     "AgentToolboxSearchTool",
     "AgentToolboxExtractTool",
     "AgentToolboxScreenshotTool",
@@ -18,6 +26,12 @@ __all__ = [
     "AgentToolboxFinanceTool",
     "AgentToolboxEmailValidatorTool",
     "AgentToolboxTranslateTool",
+    "AgentToolboxGeoIPTool",
+    "AgentToolboxNewsTool",
+    "AgentToolboxWhoisTool",
+    "AgentToolboxDnsTool",
+    "AgentToolboxPdfExtractTool",
+    "AgentToolboxQrTool",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
