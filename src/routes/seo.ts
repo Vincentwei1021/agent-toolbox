@@ -2,7 +2,7 @@ import { Hono } from "hono";
 
 const seoRouter = new Hono();
 
-const BASE_URL = "https://api.sendtoclaw.com";
+const BASE_URL = "https://api.toolboxlite.com";
 
 seoRouter.get("/robots.txt", (c) => {
   c.header("Content-Type", "text/plain");

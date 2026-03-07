@@ -2,7 +2,7 @@
 import { writeFileSync } from "fs";
 
 const API_KEY = process.env.AGENT_TOOLBOX_API_KEY;
-const BASE = process.env.AGENT_TOOLBOX_BASE_URL || "https://api.sendtoclaw.com";
+const BASE = process.env.AGENT_TOOLBOX_BASE_URL || "https://api.toolboxlite.com";
 const topic = process.argv[2];
 
 if (!API_KEY) { console.error("Error: Set AGENT_TOOLBOX_API_KEY env var"); process.exit(1); }

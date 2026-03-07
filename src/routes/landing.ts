@@ -11,11 +11,11 @@ const landingHTML = `<!DOCTYPE html>
 <meta property="og:title" content="Agent Toolbox — 13 Tools for AI Agents">
 <meta property="og:description" content="Give your AI agents real-world superpowers. Search, extract, screenshot, translate, and more — one API key, zero complexity.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://api.sendtoclaw.com">
+<meta property="og:url" content="https://api.toolboxlite.com">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Agent Toolbox — 13 Tools for AI Agents">
 <meta name="twitter:description" content="Production-ready REST API for AI agents. 13 endpoints, MCP server, LangChain integration. Free tier available.">
-<link rel="canonical" href="https://api.sendtoclaw.com">
+<link rel="canonical" href="https://api.toolboxlite.com">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agent Toolbox — Production-Ready APIs for AI Agents</title>
   <meta name="description" content="Search the web, extract content, capture screenshots, get weather and financial data — all through a single, fast API built for developers and AI agents.">

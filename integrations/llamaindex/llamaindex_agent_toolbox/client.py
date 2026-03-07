@@ -7,7 +7,7 @@ from typing import Any, Dict, Optional
 import httpx
 
 
-DEFAULT_BASE_URL = "https://api.sendtoclaw.com"
+DEFAULT_BASE_URL = "https://api.toolboxlite.com"
 DEFAULT_TIMEOUT = 30.0
 
 

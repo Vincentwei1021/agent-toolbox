@@ -64,7 +64,7 @@ print(result.content)
 
 ```python
 # Via constructor
-tools = AgentToolbox(api_key="atb_xxx", base_url="https://api.sendtoclaw.com").get_tools()
+tools = AgentToolbox(api_key="atb_xxx", base_url="https://api.toolboxlite.com").get_tools()
 
 # Or via environment variable
 import os
@@ -75,7 +75,7 @@ tools = AgentToolbox().get_tools()
 ## Get a Free API Key
 
 ```bash
-curl -X POST https://api.sendtoclaw.com/v1/auth/register \
+curl -X POST https://api.toolboxlite.com/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{"email": "you@example.com"}'
 ```
@@ -85,8 +85,8 @@ Free tier: **1,000 calls/month**, all 13 endpoints.
 ## Links
 
 - [Agent Toolbox API](https://github.com/Vincentwei1021/agent-toolbox)
-- [API Docs](https://api.sendtoclaw.com/docs)
-- [Playground](https://api.sendtoclaw.com/playground)
+- [API Docs](https://api.toolboxlite.com/docs)
+- [Playground](https://api.toolboxlite.com/playground)
 
 ## License
 

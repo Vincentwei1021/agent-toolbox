@@ -90,7 +90,7 @@ After configuring, ask Claude:
 For remote connections (e.g., Smithery), use the SSE endpoint:
 
 ```
-URL: https://api.sendtoclaw.com/sse
+URL: https://api.toolboxlite.com/sse
 Auth: ?apiKey=atb_your_key_here
 ```
 

@@ -7,10 +7,10 @@
 [![npm](https://img.shields.io/npm/v/agent-toolbox-mcp?color=6366f1&label=npm)](https://www.npmjs.com/package/agent-toolbox-mcp)
 [![PyPI](https://img.shields.io/pypi/v/langchain-agent-toolbox?color=10b981&label=langchain)](https://pypi.org/project/langchain-agent-toolbox/)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-[![Endpoints](https://img.shields.io/badge/endpoints-13-brightgreen)](https://api.sendtoclaw.com/docs)
+[![Endpoints](https://img.shields.io/badge/endpoints-13-brightgreen)](https://api.toolboxlite.com/docs)
 [![Glama](https://glama.ai/mcp/servers/@Vincentwei1021/agent-toolbox/badge)](https://glama.ai/mcp/servers/@Vincentwei1021/agent-toolbox)
 
-[Docs](https://api.sendtoclaw.com/docs) · [Playground](https://api.sendtoclaw.com/playground) · [OpenAPI Spec](https://api.sendtoclaw.com/openapi.json) · [npm](https://www.npmjs.com/package/agent-toolbox-mcp)
+[Docs](https://api.toolboxlite.com/docs) · [Playground](https://api.toolboxlite.com/playground) · [OpenAPI Spec](https://api.toolboxlite.com/openapi.json) · [npm](https://www.npmjs.com/package/agent-toolbox-mcp)
 
 </div>
 
@@ -34,7 +34,7 @@ Building AI agents that interact with the real world? You'd normally need:
 ### 1. Get your free API key
 
 ```bash
-curl -X POST https://api.sendtoclaw.com/v1/auth/register \
+curl -X POST https://api.toolboxlite.com/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{"email": "you@example.com"}'
 ```
@@ -42,7 +42,7 @@ curl -X POST https://api.sendtoclaw.com/v1/auth/register \
 ### 2. Make your first call
 
 ```bash
-curl -X POST https://api.sendtoclaw.com/v1/search \
+curl -X POST https://api.toolboxlite.com/v1/search \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query": "best AI agent frameworks"}'

@@ -10,11 +10,11 @@ const docsHTML = `<!DOCTYPE html>
 <meta property="og:title" content="Agent Toolbox Documentation">
 <meta property="og:description" content="API reference for 13 AI agent tools with interactive code examples in curl, Python, and JavaScript.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://api.sendtoclaw.com/docs">
+<meta property="og:url" content="https://api.toolboxlite.com/docs">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Agent Toolbox Documentation">
 <meta name="twitter:description" content="Complete API docs for 13 AI agent tools — search, extract, weather, screenshot, translate, and more.">
-<link rel="canonical" href="https://api.sendtoclaw.com/docs">
+<link rel="canonical" href="https://api.toolboxlite.com/docs">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Documentation — Agent Toolbox</title>
 <style>
@@ -145,7 +145,7 @@ td code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:12
 <p>Get from zero to your first API call in 3 steps:</p>
 
 <h3>1. Get your API key (free)</h3>
-<div class="code-block"><div class="code-header"><span class="lang">curl</span></div><div class="code-body"><pre>curl -X POST https://api.sendtoclaw.com/v1/auth/register \\
+<div class="code-block"><div class="code-header"><span class="lang">curl</span></div><div class="code-body"><pre>curl -X POST https://api.toolboxlite.com/v1/auth/register \\
   -H "Content-Type: application/json" \\
   -d '{"email": "you@example.com"}'</pre></div></div>
 <p>Response:</p>
@@ -165,7 +165,7 @@ td code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:12
   <div class="tab" onclick="switchTab(this,'qs')">JavaScript</div>
 </div>
 <div class="tab-content active" data-group="qs">
-<div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.sendtoclaw.com/v1/search \\
+<div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.toolboxlite.com/v1/search \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{"query": "best AI frameworks 2025"}'</pre></div></div>
@@ -174,14 +174,14 @@ td code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:12
 <div class="code-block"><div class="code-header"><span class="lang">Python</span></div><div class="code-body"><pre>import httpx
 
 resp = httpx.post(
-    "https://api.sendtoclaw.com/v1/search",
+    "https://api.toolboxlite.com/v1/search",
     headers={"Authorization": "Bearer YOUR_API_KEY"},
     json={"query": "best AI frameworks 2025"}
 )
 print(resp.json())</pre></div></div>
 </div>
 <div class="tab-content" data-group="qs">
-<div class="code-block"><div class="code-header"><span class="lang">JavaScript</span></div><div class="code-body"><pre>const resp = await fetch("https://api.sendtoclaw.com/v1/search", {
+<div class="code-block"><div class="code-header"><span class="lang">JavaScript</span></div><div class="code-body"><pre>const resp = await fetch("https://api.toolboxlite.com/v1/search", {
   method: "POST",
   headers: {
     "Authorization": "Bearer YOUR_API_KEY",
@@ -263,7 +263,7 @@ console.log(data);</pre></div></div>
   <div class="tab" onclick="switchTab(this,'search')">JavaScript</div>
 </div>
 <div class="tab-content active" data-group="search">
-<div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.sendtoclaw.com/v1/search \\
+<div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.toolboxlite.com/v1/search \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{"query": "OpenAI GPT-5", "count": 3}'</pre></div></div>
@@ -271,7 +271,7 @@ console.log(data);</pre></div></div>
 <div class="tab-content" data-group="search">
 <div class="code-block"><div class="code-header"><span class="lang">Python</span></div><div class="code-body"><pre>import httpx
 
-resp = httpx.post("https://api.sendtoclaw.com/v1/search",
+resp = httpx.post("https://api.toolboxlite.com/v1/search",
     headers={"Authorization": "Bearer YOUR_API_KEY"},
     json={"query": "OpenAI GPT-5", "count": 3})
 results = resp.json()["data"]
@@ -279,7 +279,7 @@ for r in results:
     print(f"{r['title']} — {r['url']}")</pre></div></div>
 </div>
 <div class="tab-content" data-group="search">
-<div class="code-block"><div class="code-header"><span class="lang">JavaScript</span></div><div class="code-body"><pre>const resp = await fetch("https://api.sendtoclaw.com/v1/search", {
+<div class="code-block"><div class="code-header"><span class="lang">JavaScript</span></div><div class="code-body"><pre>const resp = await fetch("https://api.toolboxlite.com/v1/search", {
   method: "POST",
   headers: { "Authorization": "Bearer YOUR_API_KEY", "Content-Type": "application/json" },
   body: JSON.stringify({ query: "OpenAI GPT-5", count: 3 })
@@ -314,15 +314,15 @@ data.forEach(r => console.log(r.title, r.url));</pre></div></div>
 <tr><td><code>format</code></td><td>string</td><td>No</td><td>"markdown" (default), "text", or "json"</td></tr>
 </table>
 <div class="tabs" data-group="extract"><div class="tab active" onclick="switchTab(this,'extract')">curl</div><div class="tab" onclick="switchTab(this,'extract')">Python</div><div class="tab" onclick="switchTab(this,'extract')">JavaScript</div></div>
-<div class="tab-content active" data-group="extract"><div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.sendtoclaw.com/v1/extract \\
+<div class="tab-content active" data-group="extract"><div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.toolboxlite.com/v1/extract \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{"url": "https://example.com", "format": "markdown"}'</pre></div></div></div>
-<div class="tab-content" data-group="extract"><div class="code-block"><div class="code-header"><span class="lang">Python</span></div><div class="code-body"><pre>resp = httpx.post("https://api.sendtoclaw.com/v1/extract",
+<div class="tab-content" data-group="extract"><div class="code-block"><div class="code-header"><span class="lang">Python</span></div><div class="code-body"><pre>resp = httpx.post("https://api.toolboxlite.com/v1/extract",
     headers={"Authorization": "Bearer YOUR_API_KEY"},
     json={"url": "https://example.com", "format": "markdown"})
 print(resp.json()["data"]["content"])</pre></div></div></div>
-<div class="tab-content" data-group="extract"><div class="code-block"><div class="code-header"><span class="lang">JavaScript</span></div><div class="code-body"><pre>const { data } = await fetch("https://api.sendtoclaw.com/v1/extract", {
+<div class="tab-content" data-group="extract"><div class="code-block"><div class="code-header"><span class="lang">JavaScript</span></div><div class="code-body"><pre>const { data } = await fetch("https://api.toolboxlite.com/v1/extract", {
   method: "POST",
   headers: { "Authorization": "Bearer YOUR_API_KEY", "Content-Type": "application/json" },
   body: JSON.stringify({ url: "https://example.com" })
@@ -344,18 +344,18 @@ console.log(data.content);</pre></div></div></div>
 <tr><td><code>fullPage</code></td><td>boolean</td><td>No</td><td>Full page screenshot (default false)</td></tr>
 </table>
 <div class="tabs" data-group="ss"><div class="tab active" onclick="switchTab(this,'ss')">curl</div><div class="tab" onclick="switchTab(this,'ss')">Python</div><div class="tab" onclick="switchTab(this,'ss')">JavaScript</div></div>
-<div class="tab-content active" data-group="ss"><div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.sendtoclaw.com/v1/screenshot \\
+<div class="tab-content active" data-group="ss"><div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.toolboxlite.com/v1/screenshot \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{"url": "https://news.ycombinator.com", "width": 1280, "height": 720}'</pre></div></div></div>
 <div class="tab-content" data-group="ss"><div class="code-block"><div class="code-header"><span class="lang">Python</span></div><div class="code-body"><pre>import base64
-resp = httpx.post("https://api.sendtoclaw.com/v1/screenshot",
+resp = httpx.post("https://api.toolboxlite.com/v1/screenshot",
     headers={"Authorization": "Bearer YOUR_API_KEY"},
     json={"url": "https://news.ycombinator.com"})
 img_b64 = resp.json()["data"]["base64"]
 with open("screenshot.png", "wb") as f:
     f.write(base64.b64decode(img_b64))</pre></div></div></div>
-<div class="tab-content" data-group="ss"><div class="code-block"><div class="code-header"><span class="lang">JavaScript</span></div><div class="code-body"><pre>const { data } = await fetch("https://api.sendtoclaw.com/v1/screenshot", {
+<div class="tab-content" data-group="ss"><div class="code-block"><div class="code-header"><span class="lang">JavaScript</span></div><div class="code-body"><pre>const { data } = await fetch("https://api.toolboxlite.com/v1/screenshot", {
   method: "POST",
   headers: { "Authorization": "Bearer YOUR_API_KEY", "Content-Type": "application/json" },
   body: JSON.stringify({ url: "https://news.ycombinator.com" })
@@ -375,16 +375,16 @@ fs.writeFileSync("screenshot.png", Buffer.from(data.base64, "base64"));</pre></d
 <tr><td><code>location</code></td><td>string</td><td>Yes</td><td>City name or location</td></tr>
 </table>
 <div class="tabs" data-group="weather"><div class="tab active" onclick="switchTab(this,'weather')">curl</div><div class="tab" onclick="switchTab(this,'weather')">Python</div><div class="tab" onclick="switchTab(this,'weather')">JavaScript</div></div>
-<div class="tab-content active" data-group="weather"><div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.sendtoclaw.com/v1/weather \\
+<div class="tab-content active" data-group="weather"><div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.toolboxlite.com/v1/weather \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{"location": "San Francisco"}'</pre></div></div></div>
-<div class="tab-content" data-group="weather"><div class="code-block"><div class="code-header"><span class="lang">Python</span></div><div class="code-body"><pre>resp = httpx.post("https://api.sendtoclaw.com/v1/weather",
+<div class="tab-content" data-group="weather"><div class="code-block"><div class="code-header"><span class="lang">Python</span></div><div class="code-body"><pre>resp = httpx.post("https://api.toolboxlite.com/v1/weather",
     headers={"Authorization": "Bearer YOUR_API_KEY"},
     json={"location": "San Francisco"})
 w = resp.json()["data"]["current"]
 print(f"{w['temperature']}°C, {w['description']}")</pre></div></div></div>
-<div class="tab-content" data-group="weather"><div class="code-block"><div class="code-header"><span class="lang">JavaScript</span></div><div class="code-body"><pre>const { data } = await fetch("https://api.sendtoclaw.com/v1/weather", {
+<div class="tab-content" data-group="weather"><div class="code-block"><div class="code-header"><span class="lang">JavaScript</span></div><div class="code-body"><pre>const { data } = await fetch("https://api.toolboxlite.com/v1/weather", {
   method: "POST",
   headers: { "Authorization": "Bearer YOUR_API_KEY", "Content-Type": "application/json" },
   body: JSON.stringify({ location: "San Francisco" })
@@ -407,15 +407,15 @@ console.log(data.current.temperature + "°C");</pre></div></div></div>
 <tr><td><code>amount</code></td><td>number</td><td>No</td><td>Amount to convert (default 1)</td></tr>
 </table>
 <div class="tabs" data-group="fin"><div class="tab active" onclick="switchTab(this,'fin')">curl (stock)</div><div class="tab" onclick="switchTab(this,'fin')">curl (exchange)</div><div class="tab" onclick="switchTab(this,'fin')">Python</div></div>
-<div class="tab-content active" data-group="fin"><div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.sendtoclaw.com/v1/finance \\
+<div class="tab-content active" data-group="fin"><div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.toolboxlite.com/v1/finance \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{"symbol": "AAPL", "type": "quote"}'</pre></div></div></div>
-<div class="tab-content" data-group="fin"><div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.sendtoclaw.com/v1/finance \\
+<div class="tab-content" data-group="fin"><div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.toolboxlite.com/v1/finance \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{"from": "USD", "to": "EUR", "amount": 100}'</pre></div></div></div>
-<div class="tab-content" data-group="fin"><div class="code-block"><div class="code-header"><span class="lang">Python</span></div><div class="code-body"><pre>resp = httpx.post("https://api.sendtoclaw.com/v1/finance",
+<div class="tab-content" data-group="fin"><div class="code-block"><div class="code-header"><span class="lang">Python</span></div><div class="code-body"><pre>resp = httpx.post("https://api.toolboxlite.com/v1/finance",
     headers={"Authorization": "Bearer YOUR_API_KEY"},
     json={"symbol": "AAPL", "type": "quote"})
 q = resp.json()["data"]
@@ -433,16 +433,16 @@ print(f"AAPL: \{q['price']} ({q['changePercent']}%)")</pre></div></div></div>
 <tr><td><code>email</code></td><td>string</td><td>Yes</td><td>Email address to validate</td></tr>
 </table>
 <div class="tabs" data-group="email"><div class="tab active" onclick="switchTab(this,'email')">curl</div><div class="tab" onclick="switchTab(this,'email')">Python</div><div class="tab" onclick="switchTab(this,'email')">JavaScript</div></div>
-<div class="tab-content active" data-group="email"><div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.sendtoclaw.com/v1/validate-email \\
+<div class="tab-content active" data-group="email"><div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.toolboxlite.com/v1/validate-email \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{"email": "test@gmail.com"}'</pre></div></div></div>
-<div class="tab-content" data-group="email"><div class="code-block"><div class="code-header"><span class="lang">Python</span></div><div class="code-body"><pre>resp = httpx.post("https://api.sendtoclaw.com/v1/validate-email",
+<div class="tab-content" data-group="email"><div class="code-block"><div class="code-header"><span class="lang">Python</span></div><div class="code-body"><pre>resp = httpx.post("https://api.toolboxlite.com/v1/validate-email",
     headers={"Authorization": "Bearer YOUR_API_KEY"},
     json={"email": "test@gmail.com"})
 v = resp.json()["data"]
 print(f"Verdict: {v['verdict']}, Score: {v['score']}, Disposable: {v['is_disposable']}")</pre></div></div></div>
-<div class="tab-content" data-group="email"><div class="code-block"><div class="code-header"><span class="lang">JavaScript</span></div><div class="code-body"><pre>const { data } = await fetch("https://api.sendtoclaw.com/v1/validate-email", {
+<div class="tab-content" data-group="email"><div class="code-block"><div class="code-header"><span class="lang">JavaScript</span></div><div class="code-body"><pre>const { data } = await fetch("https://api.toolboxlite.com/v1/validate-email", {
   method: "POST",
   headers: { "Authorization": "Bearer YOUR_API_KEY", "Content-Type": "application/json" },
   body: JSON.stringify({ email: "test@gmail.com" })
@@ -467,11 +467,11 @@ console.log(data.verdict, data.score);</pre></div></div></div>
 </table>
 <p>* Provide either <code>text</code> or <code>texts</code>, not both.</p>
 <div class="tabs" data-group="translate"><div class="tab active" onclick="switchTab(this,'translate')">curl</div><div class="tab" onclick="switchTab(this,'translate')">Python (glossary)</div><div class="tab" onclick="switchTab(this,'translate')">JavaScript (batch)</div></div>
-<div class="tab-content active" data-group="translate"><div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.sendtoclaw.com/v1/translate \\
+<div class="tab-content active" data-group="translate"><div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.toolboxlite.com/v1/translate \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{"text": "Hello, how are you?", "target": "zh"}'</pre></div></div></div>
-<div class="tab-content" data-group="translate"><div class="code-block"><div class="code-header"><span class="lang">Python</span></div><div class="code-body"><pre>resp = httpx.post("https://api.sendtoclaw.com/v1/translate",
+<div class="tab-content" data-group="translate"><div class="code-block"><div class="code-header"><span class="lang">Python</span></div><div class="code-body"><pre>resp = httpx.post("https://api.toolboxlite.com/v1/translate",
     headers={"Authorization": "Bearer YOUR_API_KEY"},
     json={
         "text": "The API endpoint returns JSON data.",
@@ -480,7 +480,7 @@ console.log(data.verdict, data.score);</pre></div></div></div>
     })
 print(resp.json()["data"]["translation"])
 # API &#31471;&#28857; &#36820;&#22238; JSON &#25968;&#25454;&#12290;</pre></div></div></div>
-<div class="tab-content" data-group="translate"><div class="code-block"><div class="code-header"><span class="lang">JavaScript</span></div><div class="code-body"><pre>const { data } = await fetch("https://api.sendtoclaw.com/v1/translate", {
+<div class="tab-content" data-group="translate"><div class="code-block"><div class="code-header"><span class="lang">JavaScript</span></div><div class="code-body"><pre>const { data } = await fetch("https://api.toolboxlite.com/v1/translate", {
   method: "POST",
   headers: { "Authorization": "Bearer YOUR_API_KEY", "Content-Type": "application/json" },
   body: JSON.stringify({ texts: ["Hello", "Goodbye"], target: "ja" })
@@ -505,16 +505,16 @@ data.translations.forEach(t => console.log(t.translation));
 <tr><td><code>limit</code></td><td>integer</td><td>No</td><td>Results count (1-50, default 10)</td></tr>
 </table>
 <div class="tabs" data-group="news"><div class="tab active" onclick="switchTab(this,'news')">curl</div><div class="tab" onclick="switchTab(this,'news')">Python</div><div class="tab" onclick="switchTab(this,'news')">JavaScript</div></div>
-<div class="tab-content active" data-group="news"><div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.sendtoclaw.com/v1/news \\
+<div class="tab-content active" data-group="news"><div class="code-block"><div class="code-header"><span class="lang">bash</span></div><div class="code-body"><pre>curl -X POST https://api.toolboxlite.com/v1/news \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{"query": "artificial intelligence", "category": "technology", "limit": 5}'</pre></div></div></div>
-<div class="tab-content" data-group="news"><div class="code-block"><div class="code-header"><span class="lang">Python</span></div><div class="code-body"><pre>resp = httpx.post("https://api.sendtoclaw.com/v1/news",
+<div class="tab-content" data-group="news"><div class="code-block"><div class="code-header"><span class="lang">Python</span></div><div class="code-body"><pre>resp = httpx.post("https://api.toolboxlite.com/v1/news",
     headers={"Authorization": "Bearer YOUR_API_KEY"},
     json={"query": "artificial intelligence", "category": "technology", "limit": 5})
 for article in resp.json()["data"]["results"]:
     print(f"{article['source']}: {article['title']}")</pre></div></div></div>
-<div class="tab-content" data-group="news"><div class="code-block"><div class="code-header"><span class="lang">JavaScript</span></div><div class="code-body"><pre>const { data } = await fetch("https://api.sendtoclaw.com/v1/news", {
+<div class="tab-content" data-group="news"><div class="code-block"><div class="code-header"><span class="lang">JavaScript</span></div><div class="code-body"><pre>const { data } = await fetch("https://api.toolboxlite.com/v1/news", {
   method: "POST",
   headers: { "Authorization": "Bearer YOUR_API_KEY", "Content-Type": "application/json" },
   body: JSON.stringify({ query: "artificial intelligence", category: "technology", limit: 5 })

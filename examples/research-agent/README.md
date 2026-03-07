@@ -12,7 +12,7 @@ npm install
 ## Usage
 
 ```bash
-# Set your API key (free at https://api.sendtoclaw.com/v1/auth/register)
+# Set your API key (free at https://api.toolboxlite.com/v1/auth/register)
 export AGENT_TOOLBOX_API_KEY=atb_your_key_here
 
 # Research any topic
