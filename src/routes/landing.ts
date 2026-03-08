@@ -813,6 +813,62 @@ const landingHTML = `<!DOCTYPE html>
         <div class="endpoint-badge"><span class="method">POST</span> <span class="path">/v1/finance</span></div>
         <div class="feature-example"><span class="tk-punct">{</span> <span class="tk-key">"symbol"</span>: <span class="tk-str">"AAPL"</span>, <span class="tk-key">"type"</span>: <span class="tk-str">"quote"</span> <span class="tk-punct">}</span></div>
       </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon">&#9993;</div>
+        <h3>Email Validation</h3>
+        <p class="desc">Validate email addresses with syntax, domain, and MX record checks.</p>
+        <div class="endpoint-badge"><span class="method">POST</span> <span class="path">/v1/validate-email</span></div>
+        <div class="feature-example"><span class="tk-punct">{</span> <span class="tk-key">"email"</span>: <span class="tk-str">"user@example.com"</span> <span class="tk-punct">}</span></div>
+      </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon">&#127760;</div>
+        <h3>Translate</h3>
+        <p class="desc">Translate text between 100+ languages. Auto-detect source language.</p>
+        <div class="endpoint-badge"><span class="method">POST</span> <span class="path">/v1/translate</span></div>
+        <div class="feature-example"><span class="tk-punct">{</span> <span class="tk-key">"text"</span>: <span class="tk-str">"Hello"</span>, <span class="tk-key">"to"</span>: <span class="tk-str">"es"</span> <span class="tk-punct">}</span></div>
+      </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon">&#127758;</div>
+        <h3>GeoIP</h3>
+        <p class="desc">Look up geographic location, ISP, and org data for any IP address.</p>
+        <div class="endpoint-badge"><span class="method">POST</span> <span class="path">/v1/geoip</span></div>
+        <div class="feature-example"><span class="tk-punct">{</span> <span class="tk-key">"ip"</span>: <span class="tk-str">"8.8.8.8"</span> <span class="tk-punct">}</span></div>
+      </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon">&#128240;</div>
+        <h3>News</h3>
+        <p class="desc">Fetch latest news headlines from Google News. Filter by topic or keyword.</p>
+        <div class="endpoint-badge"><span class="method">POST</span> <span class="path">/v1/news</span></div>
+        <div class="feature-example"><span class="tk-punct">{</span> <span class="tk-key">"query"</span>: <span class="tk-str">"AI breakthroughs"</span>, <span class="tk-key">"count"</span>: <span class="tk-num">5</span> <span class="tk-punct">}</span></div>
+      </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon">&#128209;</div>
+        <h3>WHOIS</h3>
+        <p class="desc">Look up domain registration info: registrar, dates, nameservers, status.</p>
+        <div class="endpoint-badge"><span class="method">POST</span> <span class="path">/v1/whois</span></div>
+        <div class="feature-example"><span class="tk-punct">{</span> <span class="tk-key">"domain"</span>: <span class="tk-str">"example.com"</span> <span class="tk-punct">}</span></div>
+      </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon">&#128225;</div>
+        <h3>DNS Lookup</h3>
+        <p class="desc">Query DNS records for any domain: A, AAAA, MX, TXT, NS, CNAME, and more.</p>
+        <div class="endpoint-badge"><span class="method">POST</span> <span class="path">/v1/dns</span></div>
+        <div class="feature-example"><span class="tk-punct">{</span> <span class="tk-key">"domain"</span>: <span class="tk-str">"example.com"</span>, <span class="tk-key">"type"</span>: <span class="tk-str">"MX"</span> <span class="tk-punct">}</span></div>
+      </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon">&#128196;</div>
+        <h3>PDF Extract</h3>
+        <p class="desc">Extract text content from PDF files via URL. Supports multi-page documents.</p>
+        <div class="endpoint-badge"><span class="method">POST</span> <span class="path">/v1/pdf-extract</span></div>
+        <div class="feature-example"><span class="tk-punct">{</span> <span class="tk-key">"url"</span>: <span class="tk-str">"https://example.com/doc.pdf"</span> <span class="tk-punct">}</span></div>
+      </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon">&#128307;</div>
+        <h3>QR Generate</h3>
+        <p class="desc">Generate QR codes as PNG or SVG from any text or URL.</p>
+        <div class="endpoint-badge"><span class="method">POST</span> <span class="path">/v1/qr</span></div>
+        <div class="feature-example"><span class="tk-punct">{</span> <span class="tk-key">"text"</span>: <span class="tk-str">"https://example.com"</span>, <span class="tk-key">"format"</span>: <span class="tk-str">"png"</span> <span class="tk-punct">}</span></div>
+      </div>
     </div>
   </div>
 </section>

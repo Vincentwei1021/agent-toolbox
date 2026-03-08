@@ -99,11 +99,15 @@ async function verifyViaAbstractAPI(email: string): Promise<boolean | null> {
   if (!key) return null;
   try {
     const res = await fetch(
-      `https://emailvalidation.abstractapi.com/v1/?api_key=${key}&email=${encodeURIComponent(email)}`,
+      `https://emailreputation.abstractapi.com/v1/?api_key=${key}&email=${encodeURIComponent(email)}`,
       { signal: AbortSignal.timeout(8000) }
     );
     if (!res.ok) return null;
     const data = await res.json();
+    // Reputation API: is_smtp_valid is under email_deliverability
+    const smtp = data.email_deliverability?.is_smtp_valid;
+    if (typeof smtp === "boolean") return smtp;
+    // Fallback: check old format
     if (typeof data.is_smtp_valid?.value === "boolean") return data.is_smtp_valid.value;
     if (typeof data.is_smtp_valid === "boolean") return data.is_smtp_valid;
     return null;

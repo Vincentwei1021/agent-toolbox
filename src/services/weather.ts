@@ -67,6 +67,20 @@ function getWeatherDescription(code: number): string {
   return WEATHER_CODES[code] || `Unknown (code ${code})`;
 }
 
+async function geocodeLocation(location: string): Promise<{ latitude: number; longitude: number; name: string } | null> {
+  const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(location)}&count=1`;
+  const geoResponse = await fetch(geoUrl);
+  if (!geoResponse.ok) {
+    throw new Error(`Geocoding API returned status ${geoResponse.status}`);
+  }
+  const geoData = geoResponse.json() as unknown as { results?: Array<{ latitude: number; longitude: number; name: string }> };
+  const data = await geoData;
+  if (!data.results || data.results.length === 0) {
+    return null;
+  }
+  return data.results[0];
+}
+
 export async function getWeather(input: WeatherInput): Promise<WeatherResult> {
   let latitude: number;
   let longitude: number;
@@ -77,18 +91,22 @@ export async function getWeather(input: WeatherInput): Promise<WeatherResult> {
     longitude = input.lon;
     locationName = `${latitude}, ${longitude}`;
   } else if (input.location) {
-    const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(input.location)}&count=1`;
-    const geoResponse = await fetch(geoUrl);
-    if (!geoResponse.ok) {
-      throw new Error(`Geocoding API returned status ${geoResponse.status}`);
+    // Try geocoding with the full location string first
+    let geoResult = await geocodeLocation(input.location);
+
+    // If not found and contains comma (e.g., "City, State" or "City, Country"),
+    // retry with just the city part (open-meteo often fails with suffixes)
+    if (!geoResult && input.location.includes(",")) {
+      const cityPart = input.location.split(",")[0].trim();
+      geoResult = await geocodeLocation(cityPart);
     }
-    const geoData = await geoResponse.json() as { results?: Array<{ latitude: number; longitude: number; name: string }> };
-    if (!geoData.results || geoData.results.length === 0) {
+
+    if (!geoResult) {
       throw new Error(`Location not found: ${input.location}`);
     }
-    latitude = geoData.results[0].latitude;
-    longitude = geoData.results[0].longitude;
-    locationName = geoData.results[0].name;
+    latitude = geoResult.latitude;
+    longitude = geoResult.longitude;
+    locationName = geoResult.name;
   } else {
     throw new Error("Either location or lat+lon must be provided");
   }
