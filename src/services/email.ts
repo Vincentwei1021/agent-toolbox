@@ -11,7 +11,7 @@ export interface EmailValidationResult {
   valid_syntax: boolean;
   mx_found: boolean;
   mx_records: Array<{ exchange: string; priority: number }>;
-  smtp_reachable: boolean;
+  smtp_reachable: boolean | null;
   smtp_response: string;
   is_disposable: boolean;
   score: number;
@@ -86,6 +86,103 @@ function smtpCheck(email: string, mxHost: string): Promise<{ reachable: boolean;
   });
 }
 
+// ==========================================
+// Third-party SMTP verification fallback chain
+// ==========================================
+
+function isSmtpConnectionError(response: string): boolean {
+  return response.includes("Connection error") || response === "Timeout";
+}
+
+async function verifyViaAbstractAPI(email: string): Promise<boolean | null> {
+  const key = process.env.ABSTRACTAPI_KEY;
+  if (!key) return null;
+  try {
+    const res = await fetch(
+      `https://emailvalidation.abstractapi.com/v1/?api_key=${key}&email=${encodeURIComponent(email)}`,
+      { signal: AbortSignal.timeout(8000) }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (typeof data.is_smtp_valid?.value === "boolean") return data.is_smtp_valid.value;
+    if (typeof data.is_smtp_valid === "boolean") return data.is_smtp_valid;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+async function verifyViaMailboxlayer(email: string): Promise<boolean | null> {
+  const key = process.env.MAILBOXLAYER_KEY;
+  if (!key) return null;
+  try {
+    const res = await fetch(
+      `https://apilayer.net/api/check?access_key=${key}&email=${encodeURIComponent(email)}&smtp=1&format=1`,
+      { signal: AbortSignal.timeout(8000) }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data.error) return null;
+    if (typeof data.smtp_check === "boolean") return data.smtp_check;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+async function verifyViaVerifalia(email: string): Promise<boolean | null> {
+  const user = process.env.VERIFALIA_USERNAME;
+  const pass = process.env.VERIFALIA_PASSWORD;
+  if (!user || !pass) return null;
+  try {
+    const auth = Buffer.from(`${user}:${pass}`).toString("base64");
+    const res = await fetch("https://api.verifalia.com/v2.6/email-validations", {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${auth}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ entries: [{ inputData: email }] }),
+      signal: AbortSignal.timeout(15000),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const entry = data?.entries?.data?.[0];
+    if (!entry) return null;
+    // Verifalia classification: "Deliverable", "Risky", "Undeliverable", "Unknown"
+    if (entry.classification === "Deliverable") return true;
+    if (entry.classification === "Undeliverable") return false;
+    return null; // Risky/Unknown
+  } catch {
+    return null;
+  }
+}
+
+async function thirdPartySmtpVerify(email: string): Promise<{ reachable: boolean | null; response: string }> {
+  // Try AbstractAPI first
+  const abstractResult = await verifyViaAbstractAPI(email);
+  if (abstractResult !== null) {
+    return { reachable: abstractResult, response: abstractResult ? "Verified via AbstractAPI" : "Rejected via AbstractAPI" };
+  }
+
+  // Try Mailboxlayer
+  const mailboxResult = await verifyViaMailboxlayer(email);
+  if (mailboxResult !== null) {
+    return { reachable: mailboxResult, response: mailboxResult ? "Verified via Mailboxlayer" : "Rejected via Mailboxlayer" };
+  }
+
+  // Try Verifalia
+  const verifaliaResult = await verifyViaVerifalia(email);
+  if (verifaliaResult !== null) {
+    return { reachable: verifaliaResult, response: verifaliaResult ? "Verified via Verifalia" : "Rejected via Verifalia" };
+  }
+
+  // All failed
+  return { reachable: null, response: "SMTP verification unavailable" };
+}
+
+// ==========================================
+
 export async function validateEmail(email: string): Promise<EmailValidationResult> {
   const result: EmailValidationResult = {
     email,
@@ -131,18 +228,29 @@ export async function validateEmail(email: string): Promise<EmailValidationResul
     }
   }
 
+  // Step 5: If local SMTP failed due to connection issues, try third-party APIs
+  if (!result.smtp_reachable && isSmtpConnectionError(result.smtp_response)) {
+    const thirdParty = await thirdPartySmtpVerify(email);
+    result.smtp_reachable = thirdParty.reachable;
+    result.smtp_response = thirdParty.response;
+  }
+
   // Score calculation
   let score = 1.0;
-  if (!result.smtp_reachable) score -= 0.3;
+  if (result.smtp_reachable === false) score -= 0.3;
+  else if (result.smtp_reachable === null) score -= 0.15; // unknown = slight penalty
   if (result.is_disposable) score -= 0.1;
-  if (result.smtp_response.startsWith("4")) score -= 0.1; // temp failure
+  if (result.smtp_response.startsWith("4")) score -= 0.1;
   result.score = Math.max(0, Math.round(score * 100) / 100);
 
   // Verdict
-  if (result.smtp_reachable && !result.is_disposable) {
+  if (result.smtp_reachable === true && !result.is_disposable) {
     result.verdict = "deliverable";
-  } else if (result.smtp_reachable && result.is_disposable) {
+  } else if (result.smtp_reachable === true && result.is_disposable) {
     result.verdict = "risky";
+  } else if (result.smtp_reachable === null && result.mx_found) {
+    // Can't verify SMTP but MX exists
+    result.verdict = result.is_disposable ? "risky" : "risky";
   } else if (result.mx_found) {
     result.verdict = "risky";
   } else {
