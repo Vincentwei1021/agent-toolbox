@@ -9,7 +9,7 @@ export const openApiSpec = {
     license: { name: "MIT" },
   },
   servers: [
-    { url: "https://agent-toolbox.example.com", description: "Production" },
+    { url: "https://api.toolboxlite.com", description: "Production" },
     { url: "http://localhost:3100", description: "Local development" },
   ],
   security: [{ BearerAuth: [] }],
@@ -782,6 +782,215 @@ export const openApiSpec = {
             },
           },
           "400": { description: "Invalid IP or private IP", content: { "application/json": { schema: { "$ref": "#/components/schemas/ErrorResponse" } } } },
+          "401": { description: "Unauthorized" },
+        },
+      },
+    },
+    "/v1/whois": {
+      post: {
+        tags: ["Data"],
+        summary: "WHOIS lookup",
+        description: "Look up domain registration info including registrar, creation/expiry dates, nameservers, and status codes.",
+        security: [{ ApiKeyHeader: [] }, { ApiKeyQuery: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["domain"],
+                properties: {
+                  domain: { type: "string", description: "Domain name to look up", example: "example.com" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "WHOIS data",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean" },
+                    data: {
+                      type: "object",
+                      properties: {
+                        domainName: { type: "string" },
+                        registrar: { type: "string" },
+                        createdDate: { type: "string" },
+                        expiresDate: { type: "string" },
+                        nameServers: { type: "array", items: { type: "string" } },
+                        status: { type: "array", items: { type: "string" } },
+                      },
+                    },
+                    cached: { type: "boolean" },
+                    meta: { "$ref": "#/components/schemas/Meta" },
+                  },
+                },
+                example: {
+                  success: true,
+                  data: { domainName: "example.com", registrar: "RESERVED-Internet Assigned Numbers Authority", createdDate: "1995-08-14T04:00:00Z", expiresDate: "2026-08-13T04:00:00Z", nameServers: ["a.iana-servers.net", "b.iana-servers.net"], status: ["clientDeleteProhibited"] },
+                  cached: false,
+                  meta: { requestId: "abc-123", latencyMs: 890, endpoint: "/v1/whois", timestamp: "2026-03-08T00:00:00.000Z" },
+                },
+              },
+            },
+          },
+          "401": { description: "Unauthorized" },
+        },
+      },
+    },
+    "/v1/dns": {
+      post: {
+        tags: ["Data"],
+        summary: "DNS lookup",
+        description: "Query DNS records for a domain. Supports A, AAAA, MX, TXT, NS, CNAME, SOA, SRV, CAA, and PTR record types.",
+        security: [{ ApiKeyHeader: [] }, { ApiKeyQuery: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["domain"],
+                properties: {
+                  domain: { type: "string", description: "Domain name to query", example: "example.com" },
+                  type: { type: "string", description: "DNS record type", enum: ["A", "AAAA", "MX", "TXT", "NS", "CNAME", "SOA", "SRV", "CAA", "PTR"], default: "A" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "DNS records",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean" },
+                    data: {
+                      type: "object",
+                      properties: {
+                        domain: { type: "string" },
+                        type: { type: "string" },
+                        records: { type: "array", items: { type: "object" } },
+                      },
+                    },
+                    cached: { type: "boolean" },
+                    meta: { "$ref": "#/components/schemas/Meta" },
+                  },
+                },
+                example: {
+                  success: true,
+                  data: { domain: "example.com", type: "A", records: [{ address: "93.184.216.34", ttl: 86400 }] },
+                  cached: false,
+                  meta: { requestId: "abc-123", latencyMs: 45, endpoint: "/v1/dns", timestamp: "2026-03-08T00:00:00.000Z" },
+                },
+              },
+            },
+          },
+          "401": { description: "Unauthorized" },
+        },
+      },
+    },
+    "/v1/pdf-extract": {
+      post: {
+        tags: ["Data"],
+        summary: "PDF text extraction",
+        description: "Extract text content from a PDF file via URL. Returns text with page count and document metadata.",
+        security: [{ ApiKeyHeader: [] }, { ApiKeyQuery: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["url"],
+                properties: {
+                  url: { type: "string", format: "uri", description: "URL of the PDF file", example: "https://example.com/document.pdf" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Extracted text",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean" },
+                    data: {
+                      type: "object",
+                      properties: {
+                        text: { type: "string" },
+                        pages: { type: "integer" },
+                        info: { type: "object" },
+                      },
+                    },
+                    cached: { type: "boolean" },
+                    meta: { "$ref": "#/components/schemas/Meta" },
+                  },
+                },
+              },
+            },
+          },
+          "401": { description: "Unauthorized" },
+        },
+      },
+    },
+    "/v1/qr": {
+      post: {
+        tags: ["Data"],
+        summary: "QR code generation",
+        description: "Generate a QR code from text or URL. Returns PNG or SVG image data.",
+        security: [{ ApiKeyHeader: [] }, { ApiKeyQuery: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["text"],
+                properties: {
+                  text: { type: "string", description: "Text or URL to encode", example: "https://example.com" },
+                  format: { type: "string", enum: ["png", "svg"], default: "png", description: "Output image format" },
+                  size: { type: "integer", default: 200, description: "Image size in pixels (PNG only)" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "QR code image data",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean" },
+                    data: {
+                      type: "object",
+                      properties: {
+                        format: { type: "string" },
+                        image: { type: "string", description: "Base64-encoded image (PNG) or SVG string" },
+                      },
+                    },
+                    cached: { type: "boolean" },
+                    meta: { "$ref": "#/components/schemas/Meta" },
+                  },
+                },
+              },
+            },
+          },
           "401": { description: "Unauthorized" },
         },
       },
