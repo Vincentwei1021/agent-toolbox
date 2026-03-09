@@ -13,6 +13,15 @@ const waitQueue: Array<{
   reject: (err: Error) => void;
 }> = [];
 
+const REAL_USER_AGENT =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
+
+const CONTEXT_OPTIONS = {
+  userAgent: REAL_USER_AGENT,
+  viewport: { width: 1280, height: 720 },
+  locale: "en-US",
+};
+
 async function ensureBrowser(): Promise<Browser> {
   if (!browser || !browser.isConnected()) {
     browser = await chromium.launch({
@@ -23,9 +32,9 @@ async function ensureBrowser(): Promise<Browser> {
         "--disable-gpu",
       ],
     });
-    // Pre-create context pool
+    // Pre-create context pool with realistic browser fingerprint
     for (let i = 0; i < POOL_SIZE; i++) {
-      const ctx = await browser.newContext();
+      const ctx = await browser.newContext(CONTEXT_OPTIONS);
       contextPool.push(ctx);
       available.push(ctx);
     }
@@ -55,7 +64,7 @@ export async function acquireContext(): Promise<BrowserContext> {
 
   // All pooled contexts busy but under concurrent limit — create a temp one
   activeTasks++;
-  return browser!.newContext();
+  return browser!.newContext(CONTEXT_OPTIONS);
 }
 
 export function releaseContext(ctx: BrowserContext): void {
