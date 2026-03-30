@@ -52,6 +52,10 @@ curl -X POST https://api.toolboxlite.com/v1/search \
 
 No credit card. No setup. 13 endpoints ready to use.
 
+## Hosted deployment
+
+A hosted deployment is available on [Fronteir AI](https://fronteir.ai/mcp/vincentwei1021-agent-toolbox).
+
 ## 13 Endpoints
 
 | Endpoint | Description | Cache |
