@@ -3,7 +3,7 @@ import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { z } from "zod";
 import type { IncomingMessage, ServerResponse } from "node:http";
 
-import { searchDuckDuckGo } from "./services/search.js";
+import { search } from "./services/search.js";
 import { extractContent } from "./services/extract.js";
 import { getWeather } from "./services/weather.js";
 import { getStockQuote, getExchangeRate } from "./services/finance.js";
@@ -28,10 +28,10 @@ function createMcpServer(): McpServer {
 
   server.tool(
     "search",
-    "Search the web using DuckDuckGo",
+    "Search the web (DuckDuckGo or Tavily depending on SEARCH_PROVIDER)",
     { query: z.string(), count: z.number().min(1).max(10).default(5), lang: z.string().default("en") },
     async ({ query, count, lang }) => ({
-      content: [{ type: "text" as const, text: JSON.stringify(await searchDuckDuckGo({ query, count, lang }), null, 2) }],
+      content: [{ type: "text" as const, text: JSON.stringify(await search({ query, count, lang }), null, 2) }],
     })
   );
 
