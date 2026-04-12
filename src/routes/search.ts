@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { searchDuckDuckGo } from "../services/search.js";
+import { search } from "../services/search.js";
 import { successResponse, errorResponse } from "../utils/response.js";
 import { requireString, optionalNumber, optionalString } from "../utils/validation.js";
 
@@ -15,7 +15,7 @@ searchRouter.post("/v1/search", async (c) => {
     const count = optionalNumber(body.count, 5, 1, 10);
     const lang = optionalString(body.lang, "en");
 
-    const results = await searchDuckDuckGo({ query, count, lang });
+    const results = await search({ query, count, lang });
     return c.json(successResponse(results, endpoint, startTime));
   } catch (err) {
     const message = err instanceof Error ? err.message : "Search failed";

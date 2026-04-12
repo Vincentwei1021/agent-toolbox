@@ -1,3 +1,5 @@
+import { tavily } from "@tavily/core";
+
 export interface SearchResult {
   title: string;
   url: string;
@@ -8,6 +10,34 @@ export interface SearchInput {
   query: string;
   count?: number;
   lang?: string;
+}
+
+/**
+ * Provider-aware search dispatch.
+ * Uses Tavily when SEARCH_PROVIDER=tavily and TAVILY_API_KEY is set,
+ * otherwise falls back to DuckDuckGo.
+ */
+export async function search(input: SearchInput): Promise<SearchResult[]> {
+  const provider = (process.env.SEARCH_PROVIDER || "duckduckgo").toLowerCase();
+  if (provider === "tavily" && process.env.TAVILY_API_KEY) {
+    return searchTavily(input);
+  }
+  return searchDuckDuckGo(input);
+}
+
+export async function searchTavily(input: SearchInput): Promise<SearchResult[]> {
+  const { query, count = 5 } = input;
+  const client = tavily({ apiKey: process.env.TAVILY_API_KEY! });
+  const response = await client.search(query, {
+    maxResults: count,
+    searchDepth: "basic",
+    topic: "general",
+  });
+  return (response.results || []).map((r: { title: string; url: string; content: string }) => ({
+    title: r.title,
+    url: r.url,
+    snippet: r.content,
+  }));
 }
 
 export async function searchDuckDuckGo(input: SearchInput): Promise<SearchResult[]> {

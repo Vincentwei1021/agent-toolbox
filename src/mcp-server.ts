@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { searchDuckDuckGo } from "./services/search.js";
+import { search } from "./services/search.js";
 import { extractContent } from "./services/extract.js";
 import { getWeather } from "./services/weather.js";
 import { getStockQuote, getExchangeRate } from "./services/finance.js";
@@ -15,14 +15,14 @@ const server = new McpServer({
 // Search tool
 server.tool(
   "search",
-  "Search the web using DuckDuckGo",
+  "Search the web (DuckDuckGo or Tavily depending on SEARCH_PROVIDER)",
   {
     query: z.string().describe("Search query"),
     count: z.number().min(1).max(10).default(5).describe("Number of results"),
     lang: z.string().default("en").describe("Language code"),
   },
   async ({ query, count, lang }) => {
-    const results = await searchDuckDuckGo({ query, count, lang });
+    const results = await search({ query, count, lang });
     return {
       content: [{ type: "text" as const, text: JSON.stringify(results, null, 2) }],
     };
